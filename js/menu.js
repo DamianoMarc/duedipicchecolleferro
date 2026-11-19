@@ -693,7 +693,7 @@ async function loadPublicMenu(){
           'Impossibile caricare il menù al momento. ' +
           'Chiamaci allo ' +
           '<a href="tel:+393389536266">' +
-          '+39 331 410 0134' +
+          '+39 388 953 6266' +
           '</a>.' +
           '</p>';
 
