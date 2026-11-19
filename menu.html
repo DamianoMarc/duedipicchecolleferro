@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Menù | UNICO Restaurant Valmontone</title>
-<meta name="description" content="Il menù di UNICO Restaurant a Valmontone: antipasti, primi, secondi, dolci e bevande.">
+<title>Menù | DUE DI PICCHE  COLLEFERRO</title>
+<meta name="description" content="Il menù di DUE DI PICCHE  a COLLEFERRO: antipasti, primi, secondi, dolci e bevande.">
 <meta name="robots" content="noindex, nofollow"><!-- togliere in produzione se la pagina deve comparire su Google -->
 <meta name="theme-color" content="#0e0d0c">
 <link rel="icon" type="image/png" href="logounico.png">
@@ -61,9 +61,9 @@ footer a:hover{color:var(--red)}
 <div class="stripe"></div>
 
 <header class="head">
-  <img src="logounico.png" width="104" height="104" alt="Logo UNICO Restaurant">
+  <img src="logounico.png" width="104" height="104" alt="Logo DUE DI PICCHE ">
   <h1 data-i="menu">Menù</h1>
-  <p class="meta"><span>Via Porta Napoletana 1, Valmontone</span><span data-i="hours">Aperti ogni sera dalle 19:00</span></p>
+  <p class="meta"><span>Via Porta Napoletana 1, COLLEFERRO</span><span data-i="hours">Aperti ogni sera dalle 19:00</span></p>
   <nav class="actions" aria-label="Contatti">
     <a class="primary" href="https://preenota.it/r/DUEDIPICCHE" data-i="book">Prenota un tavolo</a>
     <a href="tel:+393314100134" data-i="call">Chiama</a>
@@ -92,8 +92,8 @@ footer a:hover{color:var(--red)}
 </main>
 
 <footer>
-  <p>© <span id="yr">2026</span> UNICO Restaurant · P.IVA 15828001006</p>
-  <p>Via Porta Napoletana 1, 00038 Valmontone (RM) · <a href="tel:+393314100134">+39 331 410 0134</a></p>
+  <p>© <span id="yr">2026</span> DUE DI PICCHE  · P.IVA 15828001006</p>
+  <p>Via Porta Napoletana 1, 00038 COLLEFERRO (RM) · <a href="tel:+393314100134">+39 331 410 0134</a></p>
   <p><a href="privacy.html" data-i="privacy">Privacy e cookie</a></p>
 </footer>
 
@@ -103,26 +103,26 @@ footer a:hover{color:var(--red)}
   var T={
     it:{menu:"Menù",hours:"Aperti ogni sera dalle 19:00",book:"Prenota un tavolo",call:"Chiama",privacy:"Privacy e cookie",
         note:"Il menù può variare in base alla disponibilità stagionale degli ingredienti. Per allergie e intolleranze chiedi pure al nostro staff.",
-        wa:"Ciao UNICO RESTAURANT, vorrei prenotare un tavolo"},
+        wa:"Ciao DUE DI PICCHE , vorrei prenotare un tavolo"},
     en:{menu:"Menu",hours:"Open every evening from 7 pm",book:"Book a table",call:"Call",privacy:"Privacy & cookies",
         note:"The menu may vary according to the seasonal availability of ingredients. For allergies and intolerances, please ask our staff.",
-        wa:"Hello UNICO RESTAURANT, I would like to book a table"},
+        wa:"Hello DUE DI PICCHE , I would like to book a table"},
     fr:{menu:"Menu",hours:"Ouvert tous les soirs dès 19h",book:"Réserver une table",call:"Appeler",privacy:"Confidentialité et cookies",
         note:"Le menu peut varier selon la disponibilité saisonnière des ingrédients. Pour allergies et intolérances, demandez à notre équipe.",
-        wa:"Bonjour UNICO RESTAURANT, je voudrais réserver une table"},
+        wa:"Bonjour DUE DI PICCHE , je voudrais réserver une table"},
     de:{menu:"Speisekarte",hours:"Jeden Abend ab 19 Uhr geöffnet",book:"Tisch reservieren",call:"Anrufen",privacy:"Datenschutz & Cookies",
         note:"Die Speisekarte kann je nach saisonaler Verfügbarkeit der Zutaten variieren. Bei Allergien und Unverträglichkeiten fragen Sie bitte unser Personal.",
-        wa:"Hallo UNICO RESTAURANT, ich möchte einen Tisch reservieren"},
+        wa:"Hallo DUE DI PICCHE , ich möchte einen Tisch reservieren"},
     es:{menu:"Carta",hours:"Abierto todas las noches desde las 19:00",book:"Reservar mesa",call:"Llamar",privacy:"Privacidad y cookies",
         note:"La carta puede variar según la disponibilidad estacional de los ingredientes. Para alergias e intolerancias, pregunta a nuestro personal.",
-        wa:"Hola UNICO RESTAURANT, quisiera reservar una mesa"}
+        wa:"Hola DUE DI PICCHE , quisiera reservar una mesa"}
   };
   document.addEventListener("menu:lang",function(e){
     var l=e.detail.lang,t=T[l]||T.it;
     document.documentElement.lang=l;
     [].forEach.call(document.querySelectorAll("[data-i]"),function(n){n.textContent=t[n.dataset.i]});
     document.getElementById("wa").href="https://wa.me/393314100134?text="+encodeURIComponent(t.wa);
-    document.title=t.menu+" | UNICO Restaurant Valmontone";
+    document.title=t.menu+" | DUE DI PICCHE  COLLEFERRO";
   });
   document.addEventListener("menu:theme",function(e){
     document.documentElement.dataset.theme=e.detail.theme;

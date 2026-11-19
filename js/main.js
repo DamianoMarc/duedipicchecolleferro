@@ -84,7 +84,7 @@
           '</div>' +
           '<div class="book-body">' +
             '<div class="book-loader" role="status"><span class="book-spin" aria-hidden="true"></span><span class="book-msg">Caricamento della prenotazione…</span></div>' +
-            '<iframe class="book-frame" title="Prenotazione tavolo, UNICO Restaurant" referrerpolicy="strict-origin-when-cross-origin" ' +
+            '<iframe class="book-frame" title="Prenotazione tavolo, DUE DI PICCHE " referrerpolicy="strict-origin-when-cross-origin" ' +
               'sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>' +
           '</div>' +
         '</div>';

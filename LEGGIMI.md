@@ -1,9 +1,9 @@
-# UNICO Restaurant — sito aggiornato (23 ottobre 2026)
+# DUE DI PICCHE  — sito aggiornato (23 ottobre 2026)
 
 ## Cosa è cambiato
 - Menù dinamico rimosso: niente più `js/menu.js`, niente Supabase per il menù. `menu.html` è HTML statico (piatti, prezzi e JSON-LD `Menu` già nella pagina).
 - Design nuovo (`css/style.css`, unico file): navigazione unica (prima c'erano due menu mobile), hero con `<img>` indicizzabile, scheda "UNICO in breve" con la risposta subito, menù con foto di categoria come sfondo e tutti i piatti visibili.
-- 5 pagine SEO nuove: `ristorante-valmontone`, `steakhouse-valmontone`, `cena-vicino-valmontone-outlet`, `cena-vicino-rainbow-magicland`, `come-arrivare`. `zona.html` è ora l'hub che le collega. `faq.html` passa da 6 a 10 domande.
+- 5 pagine SEO nuove: `ristorante-COLLEFERRO`, `steakhouse-COLLEFERRO`, `cena-vicino-COLLEFERRO-outlet`, `cena-vicino-rainbow-magicland`, `come-arrivare`. `zona.html` è ora l'hub che le collega. `faq.html` passa da 6 a 10 domande.
 - SEO tecnica: titoli senza "|" nel nome (era "Ristorante|Steakhouse"), JSON-LD `Restaurant` + `WebSite` + `WebPage` + `BreadcrumbList` + `FAQPage` collegati con `@id`, sitemap con le 10 pagine, `robots.txt` (blocca `/admin.html`, consente i crawler AI), favicon quadrata, immagine social 1200x630, immagini Cloudinary ottimizzate (`f_auto,q_auto,w_*`), `_headers` per cache e sicurezza, `404.html`.
 - GEO: pagine che aprono con la risposta, FAQ in forma di domanda, NAP identico ovunque, menù in HTML (non PDF), `llms.txt`.
 - Privacy aggiornata: tolta la cache locale del menù e il ruolo di Supabase come fornitore del menù.
@@ -21,4 +21,4 @@
 - Scheda Google Business: orari, categoria "Steakhouse"/"Ristorante", foto, link a menù e prenotazione, risposta a ogni recensione. Nome, indirizzo e telefono identici a quelli del sito.
 - Search Console e Bing Webmaster Tools: invia `sitemap.xml`.
 - Profili su TripAdvisor, TheFork, Restaurant Guru con gli stessi dati. Chiedi recensioni che citino piatti e occasioni.
-- Ogni mese chiedi a ChatGPT, Perplexity, Gemini e Claude "dove mangiare carne a Valmontone" e controlla se compari.
+- Ogni mese chiedi a ChatGPT, Perplexity, Gemini e Claude "dove mangiare carne a COLLEFERRO" e controlla se compari.

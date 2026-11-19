@@ -28,25 +28,25 @@ const MENU_CATEGORY_ORDER = [
 const MENU_CATEGORY_CARDS = {
   "Antipasti": {
     image: "images/menu-antipasti.webp",
-    alt: "Antipasti di UNICO RESTAURANT a Valmontone",
+    alt: "Antipasti di DUE DI PICCHE  a COLLEFERRO",
     description: "Scopri gli antipasti"
   },
 
   "Primi": {
     image: "images/menu-primi.webp",
-    alt: "Primi piatti di UNICO RESTAURANT a Valmontone",
+    alt: "Primi piatti di DUE DI PICCHE  a COLLEFERRO",
     description: "Scopri i primi"
   },
 
   "Secondi": {
     image: "images/menu-secondi.webp",
-    alt: "Secondi piatti di UNICO RESTAURANT a Valmontone",
+    alt: "Secondi piatti di DUE DI PICCHE  a COLLEFERRO",
     description: "Scopri i secondi"
   },
 
   "Dolci": {
     image: "images/menu-dolci.webp",
-    alt: "Dolci di UNICO RESTAURANT a Valmontone",
+    alt: "Dolci di DUE DI PICCHE  a COLLEFERRO",
     description: "Scopri i dolci"
   }
 };
@@ -382,7 +382,7 @@ function injectMenuJsonLd(dishes){
       "https://unicorestaurant.netlify.app/menu.html#menu",
 
     "name":
-      "Menù UNICO RESTAURANT",
+      "Menù DUE DI PICCHE ",
 
     "inLanguage":
       "it",

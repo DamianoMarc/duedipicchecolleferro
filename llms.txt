@@ -1,20 +1,20 @@
-# UNICO Restaurant
+# DUE DI PICCHE 
 
-> RISTORANTE a Valmontone (RM), in Via Porta Napoletana 1. Cucina italiana e romana, piatti alla piastra e proposte vegetariane. Aperto ogni sera dalle 19:00. Prenotazioni online, su WhatsApp o per telefono.
+> RISTORANTE a COLLEFERRO (RM), in Via Porta Napoletana 1. Cucina italiana e romana, piatti alla piastra e proposte vegetariane. Aperto ogni sera dalle 19:00. Prenotazioni online, su WhatsApp o per telefono.
 
 ## Dati essenziali
-- Indirizzo: Via Porta Napoletana 1, 00038 Valmontone (RM), Italia
+- Indirizzo: Via Porta Napoletana 1, 00038 COLLEFERRO (RM), Italia
 - Telefono / WhatsApp: +39 331 410 0134
 - Orari: tutti i giorni dalle 19:00
 - Prenotazione: https://preenota.it/r/DUEDIPICCHE
 - Fascia di prezzo: €€
-- Vicino a: Valmontone Outlet Village, Rainbow MagicLand, uscita Valmontone dell'autostrada A1
+- Vicino a: COLLEFERRO Outlet Village, Rainbow MagicLand, uscita COLLEFERRO dell'autostrada A1
 
 ## Pagine
 - [Menù con prezzi](https://unicorestaurant.netlify.app/menu.html): antipasti, primi, secondi, dolci
-- [Ristorante a Valmontone](https://unicorestaurant.netlify.app/ristorante-valmontone.html): cucina, orari, prenotazioni
-- [Steakhouse a Valmontone](https://unicorestaurant.netlify.app/steakhouse-valmontone.html): carne e piatti alla piastra
-- [Cena vicino all'Outlet](https://unicorestaurant.netlify.app/cena-vicino-valmontone-outlet.html)
+- [Ristorante a COLLEFERRO](https://unicorestaurant.netlify.app/ristorante-COLLEFERRO.html): cucina, orari, prenotazioni
+- [Steakhouse a COLLEFERRO](https://unicorestaurant.netlify.app/steakhouse-COLLEFERRO.html): carne e piatti alla piastra
+- [Cena vicino all'Outlet](https://unicorestaurant.netlify.app/cena-vicino-COLLEFERRO-outlet.html)
 - [Cena vicino a Rainbow MagicLand](https://unicorestaurant.netlify.app/cena-vicino-rainbow-magicland.html)
 - [Come arrivare e parcheggio](https://unicorestaurant.netlify.app/come-arrivare.html)
 - [Domande frequenti](https://unicorestaurant.netlify.app/faq.html)

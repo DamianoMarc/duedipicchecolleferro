@@ -87,7 +87,7 @@ ${list}
 }).join("\n");
 
 const schema = {
-  "@context": "https://schema.org", "@type": "Menu", "@id": `${BASE}/menu.html#menu`, name: "Menù UNICO Restaurant", inLanguage: "it",
+  "@context": "https://schema.org", "@type": "Menu", "@id": `${BASE}/menu.html#menu`, name: "Menù DUE DI PICCHE ", inLanguage: "it",
   hasMenuSection: cats.map((c) => ({
     "@type": "MenuSection", name: c,
     hasMenuItem: groups.get(c).map((d) => {
