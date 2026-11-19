@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#FAFAFA"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Preenota"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<title>Preenota — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+:root {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --border: #EFEFEF;
+  --border-strong: #DBDBDB;
+  --text-1: #262626;
+  --text-2: #8E8E8E;
+  --text-3: #C7C7C7;
+  --ig-1: #4F5BD5;
+  --ig-2: #962FBF;
+  --ig-3: #D62976;
+  --ig-4: #FA7E1E;
+  --ig-5: #FEDA75;
+  --ig-gradient: linear-gradient(45deg, var(--ig-5), var(--ig-4), var(--ig-3), var(--ig-2), var(--ig-1));
+  --accent: #D62976;
+  --accent-light: rgba(214,41,118,0.08);
+  --success: #39C47B;
+  --danger: #ED4956;
+  --warning: #F5A623;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 10px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #000000;
+    --border: #262626;
+    --border-strong: #363636;
+    --text-1: #FAFAFA;
+    --text-2: #A8A8A8;
+    --text-3: #555555;
+    --accent-light: rgba(214,41,118,0.18);
+  }
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  min-height: 100dvh;
+  padding-bottom: 84px;
+  color: var(--text-1);
+  overflow-x: hidden;
+}
+
+/* ── TOPBAR ── */
+#topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--surface);
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { font-size: 21px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.logo span { background: var(--ig-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
+
+.locale-badge {
+  display: none; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  border: 1px solid var(--border);
+}
+@media(min-width:640px){ .locale-badge { display: flex; } }
+
+.sse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); transition: background 0.4s, box-shadow 0.4s; margin: 0 4px; }
+.sse-dot.connected { background: var(--success); box-shadow: 0 0 0 3px rgba(57,196,123,0.18); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-1); font-size: 18px;
+  background: transparent; transition: background 0.15s;
+}
+.icon-btn:active { background: var(--border); }
+
+/* ── ALERT / DEMO ── */
+#alert-banner {
+  display: none; margin: 0; padding: 9px 18px;
+  font-size: 12px; font-weight: 600; gap: 8px; align-items: center;
+  color: #7B5800; background: #FFF3CC;
+  border-bottom: 1px solid #F5E3A3;
+}
+#alert-banner button {
+  margin-left: auto; border: none; border-radius: 8px; padding: 5px 10px;
+  font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+  background: #7B5800; color: #fff;
+}
+
+/* ── MAIN ── */
+.main-content { max-width: 640px; margin: 0 auto; padding: 0 0 8px; }
+
+/* ── STATS (profile-style row) ── */
+.stats-row { display: flex; border-bottom: 1px solid var(--border); padding: 18px 0; margin: 0 18px 4px; }
+.stat-item { flex: 1; text-align: center; border-right: 1px solid var(--border); }
+.stat-item:last-child { border-right: none; }
+.stat-value { display: block; font-size: 20px; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+.stat-label { display: block; font-size: 11.5px; color: var(--text-2); margin-top: 3px; font-weight: 500; }
+
+/* ── TOOLBAR ── */
+.toolbar-section { padding: 14px 18px 0; }
+.search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.search-wrapper { position: relative; flex: 1; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-2); font-size: 18px; pointer-events: none; }
+.search-input {
+  width: 100%; height: 38px; border-radius: 10px; border: none; outline: none;
+  padding: 0 12px 0 38px;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 500;
+  color: var(--text-1); background: var(--border);
+}
+.search-input::placeholder { color: var(--text-2); }
+.icon-btn-flat {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-1); font-size: 18px;
+  background: var(--border); transition: background 0.15s;
+}
+.icon-btn-flat:active { background: var(--border-strong); }
+
+.filter-row { display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+.mode-btn {
+  flex: 1; height: 38px; background: none; border: none; border-bottom: 2px solid transparent;
+  font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--text-2);
+  cursor: pointer; transition: all 0.15s;
+}
+.mode-btn.active { color: var(--text-1); border-bottom-color: var(--text-1); }
+
+/* ── CHIPS ── */
+.chips-row { display: none; gap: 8px; overflow-x: auto; padding: 12px 0 4px; }
+.chips-row.show { display: flex; }
+.chips-row::-webkit-scrollbar { display: none; }
+.status-chip {
+  flex-shrink: 0; padding: 0 14px; height: 30px; border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--text-1); background: var(--surface); cursor: pointer; transition: all 0.15s;
+}
+.status-chip.chip-active { background: var(--text-1); color: var(--bg); border-color: var(--text-1); }
+
+/* ── SECTION HEADER ── */
+.section-header { display: flex; align-items: baseline; justify-content: space-between; padding: 16px 18px 8px; }
+.section-title { font-size: 15px; font-weight: 700; color: var(--text-1); }
+.count-label { font-size: 12px; font-weight: 500; color: var(--text-2); }
+.page-pad { padding: 16px 18px 0; }
+.page-sub { font-size: 12px; color: var(--text-2); margin: 4px 0 14px; line-height: 1.5; }
+
+/* ── LIST ── */
+.booking-list { display: flex; flex-direction: column; padding: 0 18px; }
+.booking-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; cursor: pointer; border-bottom: 1px solid var(--border); transition: opacity 0.15s; }
+.booking-row:active { opacity: 0.6; }
+.booking-row.dim { opacity: 0.55; }
+
+.avatar-wrap { position: relative; flex-shrink: 0; }
+.avatar-ring { width: 52px; height: 52px; border-radius: 50%; padding: 2.5px; background: var(--ig-gradient); display: flex; align-items: center; justify-content: center; }
+.avatar-ring.cancelled { background: var(--border-strong); }
+.avatar-inner {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; color: var(--text-1);
+}
+.status-badge {
+  position: absolute; bottom: -1px; right: -1px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--success); border: 2px solid var(--surface);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.status-badge.s-ARRIVATO { background: var(--ig-1); }
+.status-badge.s-COMPLETATA { background: var(--text-2); }
+.status-badge.s-NO_SHOW { background: var(--warning); }
+.status-badge.s-CANCELLATA { background: var(--danger); }
+
+.book-info { flex: 1; min-width: 0; }
+.book-name-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.book-name { font-size: 14px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.book-time-badge { font-size: 12.5px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+.book-sub { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.tag-table { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--accent-light); color: var(--accent); }
+.tag-none { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--border); color: var(--text-2); }
+.chevron-icon { color: var(--text-3); font-size: 18px; flex-shrink: 0; }
+
+/* ── EMPTY ── */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 20px; text-align: center; }
+.empty-icon { font-size: 42px; color: var(--text-3); margin-bottom: 10px; }
+.empty-msg { font-size: 13px; font-weight: 500; color: var(--text-2); line-height: 1.5; }
+
+/* ── ORARI / SALE ── */
+.orari-date-input {
+  width: 100%; height: 40px; border-radius: 10px; border: none; outline: none;
+  padding: 0 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--text-1); background: var(--border); margin-bottom: 6px;
+}
+.slot-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.slot-time { font-size: 15px; font-weight: 600; color: var(--text-1); }
+.slot-pax { font-size: 12px; font-weight: 500; color: var(--text-2); margin-top: 2px; }
+.sala-card { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 10px; background: var(--surface); }
+.sala-card.disabled { opacity: 0.55; }
+.sala-name { font-size: 14.5px; font-weight: 700; color: var(--text-1); }
+.sala-cap { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.sala-actions { display: flex; align-items: center; gap: 8px; }
+.sala-icon-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-1); }
+
+/* ── TOGGLE ── */
+.toggle-track { width: 44px; height: 26px; border-radius: 999px; position: relative; cursor: pointer; border: none; transition: background 0.2s; flex-shrink: 0; }
+.toggle-track.on { background: var(--success); }
+.toggle-track.off { background: var(--border-strong); }
+.toggle-thumb { position: absolute; top: 3px; width: 20px; height: 20px; border-radius: 50%; transition: left 0.18s cubic-bezier(.4,0,.2,1); background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
+.toggle-track.on .toggle-thumb { left: 21px; }
+.toggle-track.off .toggle-thumb { left: 3px; }
+
+/* ── FAB ── */
+#fab-new {
+  position: fixed; right: 18px; bottom: 80px;
+  width: 54px; height: 54px; border-radius: 50%; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 40;
+  background: var(--ig-gradient); color: #fff; font-size: 24px;
+  box-shadow: var(--shadow-lg); transition: transform 0.15s;
+}
+#fab-new:active { transform: scale(0.92); }
+
+/* ── BOTTOM NAV ── */
+nav.bottom-nav {
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 45;
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 6px 8px; height: 62px;
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border-radius: 10px; cursor: pointer; background: none; border: none; transition: opacity 0.15s; }
+.nav-btn .nav-icon { font-size: 23px; color: var(--text-2); }
+.nav-btn.active .nav-icon { color: var(--text-1); font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+.nav-btn .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); }
+.nav-btn.active .nav-label { color: var(--text-1); }
+
+/* ── MODAL ── */
+#modal-overlay { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.22s; }
+#modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+#modal-sheet {
+  position: relative; width: 100%; max-width: 540px;
+  border-radius: 20px 20px 0 0;
+  max-height: 88dvh; display: flex; flex-direction: column; overflow: hidden;
+  transform: translateY(100%); transition: transform 0.3s cubic-bezier(.16,1,.3,1);
+  background: var(--surface);
+}
+#modal-overlay.open #modal-sheet { transform: translateY(0); }
+.modal-drag-handle { display: flex; justify-content: center; padding: 10px 0 4px; flex-shrink: 0; }
+.drag-pill { width: 36px; height: 4px; background: var(--border-strong); border-radius: 999px; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 18px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.modal-title { font-size: 15px; font-weight: 700; color: var(--text-1); }
+.modal-close-btn { width: 30px; height: 30px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-1); font-size: 18px; background: var(--border); }
+#modal-body { flex: 1; overflow-y: auto; padding: 18px; }
+#modal-actions { padding: 14px 18px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 10px; flex-shrink: 0; }
+#modal-actions:empty { display: none; }
+
+/* ── DETAIL ── */
+.detail-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+.detail-row:last-child { border-bottom: none; }
+.detail-label { font-size: 12px; font-weight: 600; color: var(--text-2); }
+.detail-value { font-size: 14px; font-weight: 500; color: var(--text-1); text-align: right; }
+.code-badge { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.06em; color: var(--accent); background: var(--accent-light); }
+
+/* ── ACTION BUTTONS ── */
+.action-btn {
+  flex: 1; min-width: 104px; height: 44px; border-radius: 10px; border: none;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.action-btn:active { opacity: 0.7; }
+.action-btn.danger { color: var(--danger); background: var(--border); }
+.action-btn.restore { color: var(--success); background: var(--border); }
+.action-btn.soft { color: var(--text-1); background: var(--border); }
+.action-btn.whatsapp { flex: none; min-width: 0; padding: 0 18px; color: #fff; background: #25D366; }
+.action-btn.primary { color: #fff; background: var(--text-1); }
+.action-btn.grad { color: #fff; background: var(--ig-gradient); }
+.action-btn.full { width: 100%; flex: none; }
+@media (prefers-color-scheme: dark) { .action-btn.primary { color: #000; } }
+
+/* ── FORM ── */
+.form-group { margin-bottom: 12px; }
+.form-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; }
+.form-input { width: 100%; height: 42px; border-radius: 10px; border: none; outline: none; padding: 0 12px; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 500; color: var(--text-1); background: var(--border); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── SKELETON ── */
+.sk { border-radius: 8px; background: linear-gradient(90deg, var(--border) 25%, var(--border-strong) 50%, var(--border) 75%); background-size: 200% 100%; animation: shim 1.4s infinite; }
+@keyframes shim { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── TOAST ── */
+#locale-toast { position: fixed; top: 68px; left: 50%; transform: translateX(-50%); z-index: 70; padding: 8px 18px; border-radius: 999px; color: var(--text-1); font-size: 13px; font-weight: 600; display: none; white-space: nowrap; background: var(--surface); box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+@keyframes toastOut { from{opacity:1;transform:translateX(-50%) translateY(0)} to{opacity:0;transform:translateX(-50%) translateY(8px)} }
+.booking-toast { pointer-events: auto; }
+
+/* ── NUOVA PRENOTAZIONE ── */
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.slot-chip { position: relative; display: block; }
+.slot-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.slot-chip span {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 46px; border-radius: 10px; border: 1px solid var(--border-strong);
+  font-size: 13px; font-weight: 700; color: var(--text-1); background: var(--surface); cursor: pointer;
+}
+.slot-chip small { font-size: 10px; font-weight: 500; color: var(--text-2); }
+.slot-chip input:checked + span { background: var(--text-1); color: var(--bg); border-color: var(--text-1); }
+.slot-chip input:checked + span small { color: var(--bg); opacity: 0.7; }
+.slot-chip input:disabled + span { opacity: 0.4; cursor: not-allowed; }
+.slot-chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper button {
+  width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; border: none;
+  background: var(--border); color: var(--text-1); font-size: 20px; font-weight: 600; cursor: pointer;
+}
+.stepper button:active { background: var(--border-strong); }
+.stepper .form-input { text-align: center; -moz-appearance: textfield; }
+.stepper .form-input::-webkit-outer-spin-button,
+.stepper .form-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.form-error {
+  display: none; margin: 4px 0 8px; padding: 10px 12px; border-radius: 10px;
+  font-size: 12.5px; font-weight: 600; color: var(--danger); background: rgba(237,73,86,0.1);
+}
+.form-hint { font-size: 11.5px; color: var(--text-2); margin-top: 5px; }
+.form-input:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.action-btn:disabled { opacity: 0.5; cursor: default; }
+.app-toast {
+  position: fixed; left: 50%; bottom: 140px; transform: translateX(-50%); z-index: 9999;
+  max-width: 340px; padding: 10px 16px; border-radius: 14px; font-size: 13px; font-weight: 600;
+  color: var(--text-1); background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow-md); animation: toastIn .3s cubic-bezier(.16,1,.3,1);
+}
+
+.hidden { display: none !important; }
+.material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; user-select: none; vertical-align: middle; }
+.fill-icon { font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+
+/* ════════ NUOVO: SALA LIVE ════════ */
+.day-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.day-nav .day-label { flex: 1; text-align: center; font-size: 15px; font-weight: 700; text-transform: capitalize; cursor: pointer; padding: 8px; border-radius: 10px; }
+.day-nav .day-label:active { background: var(--border); }
+.time-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px 10px; margin-bottom: 12px; }
+.time-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.time-label { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; background: var(--ig-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.now-btn { border: none; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; background: var(--border); color: var(--text-1); }
+input[type=range].time-range { width: 100%; accent-color: var(--accent); height: 28px; }
+.range-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-2); font-weight: 600; margin-top: -2px; }
+
+.kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.kpi-mini { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; text-align: center; }
+.kpi-mini b { display: block; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+.kpi-mini span { display: block; font-size: 10.5px; color: var(--text-2); font-weight: 600; margin-top: 2px; }
+
+.seg { display: flex; background: var(--border); border-radius: 10px; padding: 3px; margin-bottom: 12px; }
+.seg button { flex: 1; height: 30px; border: none; background: none; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--text-2); cursor: pointer; }
+.seg button.active { background: var(--surface); color: var(--text-1); box-shadow: var(--shadow-sm); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; font-weight: 600; color: var(--text-2); margin: 10px 2px 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+
+.floor {
+  position: relative; width: 100%; aspect-ratio: 10 / 9; max-height: 72dvh;
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background-color: var(--surface);
+  background-image: radial-gradient(var(--border-strong) 1px, transparent 1.2px);
+  background-size: 22px 22px; overflow: hidden;
+}
+.tbl {
+  position: absolute; transform: translate(-50%, -50%);
+  width: var(--w); aspect-ratio: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 2px; overflow: hidden;
+  border: 2px solid var(--border-strong); background: var(--surface);
+  cursor: pointer; user-select: none;
+  transition: transform .15s, box-shadow .15s, background .2s, border-color .2s;
+}
+.tbl.tondo { border-radius: 50%; }
+.tbl.quadrato { border-radius: 14px; }
+.tbl.rettangolo { border-radius: 12px; aspect-ratio: 1.6; }
+.tbl:active { transform: translate(-50%, -50%) scale(0.96); }
+.tbl .t-name { font-size: clamp(11px, 3.2vw, 15px); font-weight: 800; line-height: 1.1; }
+.tbl .t-meta { font-size: clamp(9px, 2.4vw, 11px); font-weight: 600; opacity: .75; line-height: 1.2; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl-free { border-color: var(--success); background: rgba(57,196,123,.08); }
+.tbl-soon { border-color: var(--warning); border-style: dashed; background: rgba(245,166,35,.12); }
+.tbl-busy { border: 2px solid transparent; background: var(--ig-gradient); color: #fff; box-shadow: var(--shadow-md); }
+.tbl-seated { border: 2px solid transparent; background: linear-gradient(135deg, #2ea36a, #39C47B); color: #fff; box-shadow: var(--shadow-md); }
+.tbl-off { opacity: .35; border-style: dotted; }
+.tbl.drop-hover { box-shadow: 0 0 0 4px rgba(214,41,118,.35); transform: translate(-50%, -50%) scale(1.06); }
+.tbl.editable { touch-action: none; cursor: grab; }
+.tbl.editable:active { cursor: grabbing; }
+
+.unassigned { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-b {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text-1);
+}
+.chip-b b { color: var(--accent); }
+.chip-b[draggable=true] { cursor: grab; }
+
+/* Timeline */
+.tl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.tl { position: relative; min-width: 100%; }
+.tl-head, .tl-row { display: flex; height: 40px; border-bottom: 1px solid var(--border); }
+.tl-row:last-child { border-bottom: none; }
+.tl-label { position: sticky; left: 0; z-index: 3; flex: 0 0 74px; background: var(--surface); border-right: 1px solid var(--border); padding: 0 10px; display: flex; flex-direction: column; justify-content: center; font-size: 12px; font-weight: 800; }
+.tl-label small { font-size: 10px; font-weight: 600; color: var(--text-2); }
+.tl-track { position: relative; flex: 1 0 auto; background-image: linear-gradient(to right, var(--border) 1px, transparent 1px); background-size: var(--hw) 100%; }
+.tl-hour { position: absolute; top: 0; height: 100%; display: flex; align-items: center; padding-left: 6px; font-size: 10.5px; font-weight: 700; color: var(--text-2); }
+.tl-bar { position: absolute; top: 5px; bottom: 5px; border-radius: 8px; padding: 0 8px; display: flex; align-items: center; font-size: 11px; font-weight: 700; color: #fff; overflow: hidden; white-space: nowrap; cursor: pointer; background: var(--ig-gradient); }
+.tl-bar.seated { background: linear-gradient(135deg, #2ea36a, #39C47B); }
+.tl-bar.done { background: var(--text-3); }
+.tl-now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); z-index: 2; pointer-events: none; }
+.tl-now.ov { left: 74px; }
+
+/* Assign list */
+.assign-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; background: var(--surface); }
+.assign-row.disabled { opacity: .45; cursor: not-allowed; }
+.assign-row.best { border-color: var(--accent); background: var(--accent-light); }
+.assign-ico { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--border); font-weight: 800; font-size: 12px; flex-shrink: 0; }
+.assign-main { flex: 1; min-width: 0; }
+.assign-main b { display: block; font-size: 14px; }
+.assign-main span { font-size: 12px; color: var(--text-2); }
+.best-badge { font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: var(--ig-gradient); color: #fff; }
+
+/* ════════ NUOVO: STATISTICHE ════════ */
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; }
+.kpi .k-val { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
+.kpi .k-lbl { font-size: 11.5px; font-weight: 600; color: var(--text-2); margin-top: 2px; }
+.delta { display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.delta.up { color: #1f9d5b; background: rgba(57,196,123,.15); }
+.delta.down { color: var(--danger); background: rgba(237,73,86,.12); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin: 0 18px; }
+.card-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.card-sub { font-size: 11.5px; color: var(--text-2); margin-bottom: 14px; }
+.rings { display: flex; justify-content: space-around; text-align: center; }
+.ring { --p: 0; position: relative; width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 8px; background: conic-gradient(var(--ig-4), var(--ig-3), var(--ig-2) calc(var(--p) * 1%), var(--border) 0); display: flex; align-items: center; justify-content: center; }
+.ring::after { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: var(--surface); }
+.ring span { position: relative; z-index: 1; font-size: 16px; font-weight: 800; }
+.ring-lbl { font-size: 12px; font-weight: 600; color: var(--text-2); }
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 130px; }
+.bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.bar { width: 100%; border-radius: 4px 4px 2px 2px; background: var(--ig-gradient); min-height: 2px; }
+.bar.today { box-shadow: 0 0 0 2px var(--text-1); }
+.bar-val { font-size: 10px; font-weight: 700; margin-bottom: 3px; }
+.bar-lbl { font-size: 9.5px; font-weight: 600; color: var(--text-2); margin-top: 5px; height: 12px; white-space: nowrap; }
+.heat { display: grid; gap: 3px; }
+.heat .h-cell { height: 24px; border-radius: 5px; background: rgba(214,41,118,var(--a)); }
+.heat .h-lbl { font-size: 10px; font-weight: 700; color: var(--text-2); display: flex; align-items: center; }
+.heat .h-col { font-size: 9.5px; font-weight: 700; color: var(--text-2); text-align: center; }
+.hbar { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12px; font-weight: 600; }
+.hbar .hb-lbl { width: 54px; color: var(--text-2); }
+.hbar .hb-track { flex: 1; height: 10px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.hbar .hb-fill { height: 100%; border-radius: 999px; background: var(--ig-gradient); }
+.hbar .hb-val { width: 34px; text-align: right; }
+.stack { display: flex; flex-direction: column; gap: 14px; padding-bottom: 12px; }
+.cust-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.cust-row:last-child { border-bottom: none; }
+.cust-row .mini { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; background: var(--accent-light); color: var(--accent); flex-shrink: 0; }
+.cust-row .c-main { flex: 1; min-width: 0; }
+.cust-row .c-main b { display: block; font-size: 13.5px; }
+.cust-row .c-main span { font-size: 12px; color: var(--text-2); }
+.cust-row .c-vis { font-size: 12px; font-weight: 800; color: var(--accent); }
+
+/* Gestione */
+.sub-tabs { display: flex; border-bottom: 1px solid var(--border); margin: 0 18px; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); margin-bottom: 14px; }
+.set-row b { font-size: 13px; display: block; }
+.set-row span { font-size: 11.5px; color: var(--text-2); }
+.set-row input { width: 74px; height: 38px; text-align: center; }
+.hint { font-size: 11.5px; color: var(--text-2); margin: 8px 2px 0; line-height: 1.5; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header id="topbar">
+  <div class="logo">Pree<span>Nota</span></div>
+  <div class="header-actions">
+    <div id="locale-badge" class="locale-badge" title="Locale attivo">
+      <span class="material-symbols-outlined fill-icon" style="font-size:14px;color:var(--accent);">storefront</span>
+      <span id="locale-nome-label" style="color:var(--text-1);font-size:12px;font-weight:600;"></span>
+    </div>
+    <button id="locale-badge-mobile" class="icon-btn" onclick="showLocaleInfo()">
+      <span class="material-symbols-outlined fill-icon" style="font-size:18px;">storefront</span>
+    </button>
+    <div id="sse-dot" class="sse-dot" title="Notifiche in tempo reale"></div>
+    <button onclick="logout()" class="icon-btn" title="Esci">
+      <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═════════ PRENOTAZIONI ═════════ -->
+<main id="section-prenotazioni" class="main-content">
+  <div class="stats-row" id="stats-row">
+    <div class="stat-item"><span class="sk" style="height:20px;width:30px;display:inline-block;margin-bottom:4px;"></span><span class="sk" style="height:10px;width:36px;display:block;margin:4px auto 0;"></span></div>
+    <div class="stat-item"><span class="sk" style="height:20px;width:30px;display:inline-block;margin-bottom:4px;"></span><span class="sk" style="height:10px;width:50px;display:block;margin:4px auto 0;"></span></div>
+    <div class="stat-item"><span class="sk" style="height:20px;width:30px;display:inline-block;margin-bottom:4px;"></span><span class="sk" style="height:10px;width:40px;display:block;margin:4px auto 0;"></span></div>
+  </div>
+
+  <div class="toolbar-section">
+    <div class="search-row">
+      <div class="search-wrapper">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input id="search-input" type="text" class="search-input" placeholder="Cerca per nome, telefono o codice…" oninput="applyFilters()"/>
+      </div>
+      <button onclick="exportExcel()" class="icon-btn-flat" title="Esporta Excel">
+        <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+      </button>
+      <input id="date-hidden" type="date" style="position:absolute;opacity:0;height:1px;width:1px;" onchange="onDateChange()"/>
+      <button onclick="openDatePicker()" id="calendar-trigger-btn" class="icon-btn-flat" title="Scegli data">
+        <span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span>
+      </button>
+      <button onclick="clearDate()" id="clear-date-btn" class="icon-btn-flat hidden" title="Rimuovi filtro">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+      <button onclick="toggleStatusFilter()" id="filter-btn" class="icon-btn-flat" title="Filtra per stato">
+        <span class="material-symbols-outlined" style="font-size:18px;">tune</span>
+      </button>
+    </div>
+    <div class="filter-row">
+      <button onclick="setMode('TODAY')" id="btn-today" class="mode-btn active">Oggi</button>
+      <button onclick="setMode('TOMORROW')" id="btn-tomorrow" class="mode-btn">Domani</button>
+      <button onclick="setMode('WEEK')" id="btn-week" class="mode-btn">Tutte</button>
+    </div>
+    <div id="status-chips" class="chips-row">
+      <button data-status="" onclick="selectStatus(this)" class="status-chip chip-active">Tutte</button>
+      <button data-status="CONFERMATA" onclick="selectStatus(this)" class="status-chip">Confermate</button>
+      <button data-status="ARRIVATO" onclick="selectStatus(this)" class="status-chip">Arrivati</button>
+      <button data-status="COMPLETATA" onclick="selectStatus(this)" class="status-chip">Completate</button>
+      <button data-status="NO_SHOW" onclick="selectStatus(this)" class="status-chip">No-show</button>
+      <button data-status="CANCELLATA" onclick="selectStatus(this)" class="status-chip">Cancellate</button>
+      <button data-status="SENZA_TAVOLO" onclick="selectStatus(this)" class="status-chip">Senza tavolo</button>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2 class="section-title">Prenotazioni</h2>
+    <span id="count-label" class="count-label"></span>
+  </div>
+  <div id="list" class="booking-list"></div>
+</main>
+
+<!-- ═════════ SALA LIVE ═════════ -->
+<main id="section-live" class="main-content hidden">
+  <div class="page-pad">
+    <div class="day-nav">
+      <button class="icon-btn-flat" onclick="liveShiftDay(-1)"><span class="material-symbols-outlined">chevron_left</span></button>
+      <div class="day-label" id="live-day-label" onclick="document.getElementById('live-date').showPicker()"></div>
+      <input id="live-date" type="date" style="position:absolute;opacity:0;height:1px;width:1px;" onchange="liveSetDate(this.value)"/>
+      <button class="icon-btn-flat" onclick="liveShiftDay(1)"><span class="material-symbols-outlined">chevron_right</span></button>
+    </div>
+
+    <div class="time-box">
+      <div class="time-top">
+        <div class="time-label" id="live-time-label">--:--</div>
+        <button class="now-btn" onclick="liveNow()">● Adesso</button>
+      </div>
+      <input id="live-range" class="time-range" type="range" min="720" max="1410" step="30" value="1230" oninput="liveSetTime(+this.value)"/>
+      <div class="range-ticks"><span>12:00</span><span>15:00</span><span>19:00</span><span>23:30</span></div>
+    </div>
+
+    <div class="kpi-strip" id="live-kpis"></div>
+
+    <div id="live-sala-tabs" class="chips-row show" style="padding-top:0;padding-bottom:12px;"></div>
+
+    <div class="seg">
+      <button id="seg-map" class="active" onclick="liveSetView('map')">Mappa</button>
+      <button id="seg-tl" onclick="liveSetView('timeline')">Timeline</button>
+    </div>
+
+    <div id="live-board"></div>
+    <div class="legend">
+      <span><i style="background:var(--success)"></i>Libero</span>
+      <span><i style="background:var(--warning)"></i>In arrivo</span>
+      <span><i style="background:var(--ig-3)"></i>Prenotato</span>
+      <span><i style="background:#2ea36a"></i>Seduti</span>
+    </div>
+
+    <div class="section-header" style="padding-left:0;padding-right:0;">
+      <h2 class="section-title">Senza tavolo</h2>
+      <span class="count-label" id="live-unassigned-count"></span>
+    </div>
+    <div id="live-unassigned" class="unassigned"></div>
+    <p class="hint" id="live-dnd-hint">Tocca una prenotazione per assegnarle un tavolo, oppure trascinala su un tavolo (da computer). L'assegnazione è sempre facoltativa.</p>
+  </div>
+</main>
+
+<!-- ═════════ STATISTICHE ═════════ -->
+<main id="section-stats" class="main-content hidden">
+  <div class="page-pad">
+    <h2 class="section-title">Statistiche</h2>
+    <p class="page-sub">Andamento del locale a confronto con il periodo precedente.</p>
+    <div class="seg" id="stats-seg">
+      <button onclick="setStatsRange(7)">7 giorni</button>
+      <button class="active" onclick="setStatsRange(30)">30 giorni</button>
+      <button onclick="setStatsRange(90)">90 giorni</button>
+    </div>
+  </div>
+  <div id="stats-content"></div>
+</main>
+
+<!-- ═════════ GESTIONE ═════════ -->
+<main id="section-gestione" class="main-content hidden">
+  <div class="page-pad" style="padding-bottom:10px;">
+    <h2 class="section-title">Gestione</h2>
+  </div>
+  <div class="sub-tabs">
+    <button class="mode-btn active" id="gt-orari" onclick="gestSub('orari')">Orari</button>
+    <button class="mode-btn" id="gt-sale" onclick="gestSub('sale')">Sale</button>
+    <button class="mode-btn" id="gt-tavoli" onclick="gestSub('tavoli')">Tavoli</button>
+  </div>
+
+  <div id="g-orari">
+    <div style="padding:16px 18px 0;">
+      <p class="page-sub" style="margin-top:0;">Abilita o disabilita le fasce orarie per le prenotazioni online. Il numero indica le persone prenotate su quello slot.</p>
+      <input type="date" id="orari-date-picker" class="orari-date-input" onchange="loadSlots()"/>
+      <select id="orari-sala-picker" class="orari-date-input hidden" onchange="loadSlots()">
+        <option value="">Tutte le sale (vista aggregata)</option>
+      </select>
+    </div>
+    <div id="slots-container" style="padding:0 18px;"></div>
+  </div>
+
+  <div id="g-sale" class="hidden">
+    <div style="padding:16px 18px 0;">
+      <p class="page-sub" style="margin-top:0;">Crea le sale e imposta la capienza massima per ciascuna.</p>
+    </div>
+    <div id="sale-container" style="padding:0 18px 14px;"></div>
+    <div style="padding:0 18px 18px;">
+      <button onclick="openNewSalaModal()" class="action-btn primary full">
+        <span class="material-symbols-outlined" style="font-size:17px;">add</span> Nuova sala
+      </button>
+    </div>
+  </div>
+
+  <div id="g-tavoli" class="hidden">
+    <div style="padding:16px 18px 0;">
+      <div class="set-row">
+        <div><b>Durata prenotazione</b><span>Minuti di occupazione di un tavolo</span></div>
+        <input type="number" id="set-durata" class="form-input" min="30" step="15" onchange="saveDurata(this.value)"/>
+      </div>
+      <div id="gest-sala-tabs" class="chips-row show" style="padding-top:0;padding-bottom:12px;"></div>
+      <div id="gest-floor"></div>
+      <p class="hint">Trascina i tavoli per disporli come nel tuo locale. Tocca un tavolo per modificarlo.</p>
+      <button onclick="openTavoloModal()" class="action-btn grad full" style="margin-top:14px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">add</span> Nuovo tavolo
+      </button>
+    </div>
+  </div>
+</main>
+
+<button id="fab-new" onclick="openNewModal()" title="Nuova prenotazione">
+  <span class="material-symbols-outlined" style="font-size:26px;">add</span>
+</button>
+
+<nav class="bottom-nav">
+  <button onclick="switchTab('prenotazioni')" id="nav-prenotazioni" class="nav-btn active">
+    <span class="material-symbols-outlined nav-icon">calendar_today</span><span class="nav-label">Prenotaz.</span>
+  </button>
+  <button onclick="switchTab('live')" id="nav-live" class="nav-btn">
+    <span class="material-symbols-outlined nav-icon">table_restaurant</span><span class="nav-label">Sala live</span>
+  </button>
+  <button onclick="switchTab('stats')" id="nav-stats" class="nav-btn">
+    <span class="material-symbols-outlined nav-icon">insights</span><span class="nav-label">Statistiche</span>
+  </button>
+  <button onclick="switchTab('gestione')" id="nav-gestione" class="nav-btn">
+    <span class="material-symbols-outlined nav-icon">settings</span><span class="nav-label">Gestione</span>
+  </button>
+</nav>
+
+<div id="modal-overlay" aria-modal="true">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div id="modal-sheet">
+    <div class="modal-drag-handle"><div class="drag-pill"></div></div>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Dettaglio prenotazione</h3>
+      <button class="modal-close-btn" onclick="closeModal()">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div id="modal-body"></div>
+    <div id="modal-actions"></div>
+  </div>
+</div>
+
+<div id="locale-toast"></div>
+
+<script src="config.js"></script>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<script>
+if (!Auth.isLogged()) window.location.replace("/login.html");
+
+// ───────── utilità ─────────
+const pad2 = n => String(n).padStart(2, "0");
+const localISO = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayISO = () => localISO(new Date());
+const addDays = (iso, n) => { const d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + n); return localISO(d); };
+const toMin = s => { const [h, m] = String(s || "0:0").split(":").map(Number); return h * 60 + (m || 0); };
+const fromMin = m => `${pad2(Math.floor(m / 60))}:${pad2(m % 60)}`;
+const nowMin = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); };
+const sameId = (a, b) => a != null && b != null && String(a) === String(b);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+function esc(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function fmtDate(d) { if (!d) return "—"; const [y, m, day] = d.split("-"); return `${day}/${m}/${y}`; }
+function emptyState(msg, icon) { return `<div class="empty-state"><span class="material-symbols-outlined empty-icon">${icon}</span><p class="empty-msg">${msg}</p></div>`; }
+function initials(name) { if (!name) return "?"; const p = name.trim().split(/\s+/); return ((p[0]?.[0] || "") + (p.length > 1 ? p[1][0] : "")).toUpperCase() || "?"; }
+const isActive = b => b.status !== "CANCELLATA" && b.status !== "NO_SHOW";
+const STATUS_LABEL = { CONFERMATA: "Confermata", ARRIVATO: "Arrivato", COMPLETATA: "Completata", NO_SHOW: "No-show", CANCELLATA: "Cancellata" };
+const STATUS_ICON = { CONFERMATA: "check", ARRIVATO: "login", COMPLETATA: "done_all", NO_SHOW: "person_off", CANCELLATA: "close" };
+const SERVICE_START = 12 * 60, SERVICE_END = 23 * 60 + 30;
+const DOW = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
+
+// ───────── stato ─────────
+let allBookings = [], filteredBookings = [], activeStatus = "";
+let activeDateMode = "TODAY", customDate = "", currentBooking = null, allSlots = [];
+let allSale = [], allTavoli = [], settings = { durataDefaultMin: 90 }, lookupsLoaded = false;
+let live = { date: todayISO(), time: 1230, sala: null, view: "map", bookings: [] };
+let gest = { sub: "orari", sala: null };
+let statsRange = 30, currentTab = "prenotazioni";
+const bookingCache = {};
+let localCreatedIds = new Set(), pendingManual = null; // prenotazioni inserite da questa dashboard
+
+function findBooking(id) {
+  return allBookings.find(b => sameId(b.id, id)) || live.bookings.find(b => sameId(b.id, id)) || bookingCache[id] || null;
+}
+function upsert(arr, b, date) {
+  const i = arr.findIndex(x => sameId(x.id, b.id));
+  if (i > -1) arr[i] = b; else if (!date || b.data === date) arr.unshift(b);
+}
+function mergeBooking(b) {
+  b = { ...(findBooking(b.id) || {}), ...b };
+  bookingCache[b.id] = b;
+  upsert(allBookings, b, getDateParam());
+  upsert(live.bookings, b, live.date);
+  return b;
+}
+function refreshViews() {
+  applyFilters();
+  if (!document.getElementById("section-live").classList.contains("hidden")) renderLive();
+}
+async function loadLookups(force) {
+  if (lookupsLoaded && !force) return;
+  const [sale, tavoli, imp] = await Promise.all([
+    apiFetch("/sale/admin").catch(() => []),
+    apiFetch("/tavoli/admin").catch(() => []),
+    apiFetch("/locale/impostazioni").catch(() => null)
+  ]);
+  allSale = Array.isArray(sale) ? sale : [];
+  allTavoli = Array.isArray(tavoli) ? tavoli : [];
+  if (imp?.durataDefaultMin) settings = imp;
+  lookupsLoaded = true;
+}
+
+// ───────── avvio ─────────
+document.addEventListener("DOMContentLoaded", async () => {
+  if ("clearAppBadge" in navigator) { try { await navigator.clearAppBadge(); } catch (e) {} }
+  let nome = Auth.localeNome()?.trim();
+  if (!nome || nome === "Locale") nome = await fetchLocaleNome();
+  nome = nome || "Locale";
+  document.getElementById("locale-nome-label").textContent = nome;
+  document.getElementById("orari-date-picker").value = todayISO();
+  document.title = `${nome} — Preenota`;
+  await Promise.all([loadStats(), loadBookings(), loadLookups()]);
+  initSSE();
+  setTimeout(() => { if (typeof requestNotificationPermission === "function") requestNotificationPermission(); }, 1500);
+});
+
+async function fetchLocaleNome() {
+  try {
+    const id = Auth.localeId(); if (!id) return null;
+    const current = await apiFetch(`/locali/${id}`);
+    if (current?.nome) { Auth.save({ token: Auth.token(), localeId: id, localeNome: current.nome }); return current.nome; }
+  } catch (e) {}
+  return null;
+}
+function showLocaleInfo() {
+  const nome = Auth.localeNome()?.trim() || "Locale";
+  const toast = document.getElementById("locale-toast");
+  toast.textContent = `📍 ${nome}`; toast.style.display = "block";
+  setTimeout(() => { toast.style.display = "none"; }, 2200);
+}
+
+// ───────── SSE ─────────
+let sseConnection = null, sseRetryCount = 0;
+function initSSE() {
+  const token = Auth.token(); if (!token) return;
+  if (sseConnection) { sseConnection.close(); sseConnection = null; }
+  sseConnection = new EventSource(`${API_BASE}/stream?token=${encodeURIComponent(token)}`);
+  sseConnection.onopen = () => { sseRetryCount = 0; setSseDot(true); };
+  sseConnection.addEventListener("CREATED", e => { try { onNewBooking(JSON.parse(e.data)); } catch (err) {} });
+  sseConnection.addEventListener("UPDATED", e => { try { mergeBooking(JSON.parse(e.data)); refreshViews(); } catch (err) {} });
+  sseConnection.addEventListener("DELETED", e => {
+    try {
+      const b = JSON.parse(e.data);
+      allBookings = allBookings.filter(x => !sameId(x.id, b.id));
+      live.bookings = live.bookings.filter(x => !sameId(x.id, b.id));
+      refreshViews(); loadStats();
+    } catch (err) {}
+  });
+  sseConnection.onerror = () => {
+    setSseDot(false); sseConnection.close(); sseConnection = null;
+    setTimeout(initSSE, Math.min(3000 * Math.pow(2, sseRetryCount++), 30000));
+  };
+}
+function setSseDot(c) { document.getElementById("sse-dot")?.classList.toggle("connected", c); }
+function onNewBooking(booking) {
+  // una prenotazione inserita da qui non deve suonare né mostrare il toast "nuova prenotazione"
+  const mine = localCreatedIds.has(String(booking.id)) ||
+    (pendingManual && booking.nome === pendingManual.nome && booking.data === pendingManual.data && booking.ora === pendingManual.ora);
+  if (!mine) { playNotificationSound(); showBookingToast(booking); }
+  bookingCache[booking.id] = booking;
+  upsert(live.bookings, booking, live.date);
+  const dateFilt = getDateParam();
+  if (!dateFilt || booking.data === dateFilt) upsert(allBookings, booking, dateFilt);
+  refreshViews(); loadStats();
+  if ("setAppBadge" in navigator) navigator.setAppBadge(allBookings.length).catch(() => {});
+}
+
+// ───────── PRENOTAZIONI ─────────
+function getDateParam() {
+  if (activeDateMode === "TODAY") return todayISO();
+  if (activeDateMode === "TOMORROW") return addDays(todayISO(), 1);
+  if (activeDateMode === "CUSTOM") return customDate;
+  return null;
+}
+async function loadBookings() {
+  try {
+    const date = getDateParam();
+    const res = await apiFetch(date ? `/prenotazioni?data=${date}` : `/prenotazioni`);
+    allBookings = Array.isArray(res) ? res : [];
+    allBookings.forEach(b => { bookingCache[b.id] = b; });
+    applyFilters();
+  } catch (e) { document.getElementById("list").innerHTML = emptyState("Errore nel caricamento", "wifi_off"); }
+}
+function applyFilters() {
+  const q = (document.getElementById("search-input").value || "").toLowerCase().trim();
+  filteredBookings = allBookings.filter(b => {
+    const st = (b.status || "").toUpperCase();
+    if (activeStatus === "SENZA_TAVOLO") { if (!isActive(b) || st === "COMPLETATA" || b.tavoloId) return false; }
+    else if (activeStatus && st !== activeStatus) return false;
+    if (q) { const hay = [b.nome, b.telefono, b.email, b.codice, b.tavoloNome].join(" ").toLowerCase(); if (!hay.includes(q)) return false; }
+    return true;
+  });
+  renderList(filteredBookings);
+}
+function renderList(list) {
+  const el = document.getElementById("list");
+  document.getElementById("count-label").textContent = list.length ? `${list.length} risultat${list.length === 1 ? "o" : "i"}` : "0 risultati";
+  if (!list.length) { el.innerHTML = emptyState("Nessuna prenotazione trovata", "event_busy"); return; }
+  el.innerHTML = list.map(b => {
+    const st = (b.status || "CONFERMATA").toUpperCase();
+    const dim = st === "CANCELLATA" || st === "NO_SHOW" || st === "COMPLETATA";
+    const grey = st === "CANCELLATA" || st === "NO_SHOW";
+    const tavolo = b.tavoloNome ? `<span class="tag-table">🪑 ${esc(b.tavoloNome)}</span>` : (isActive(b) && st !== "COMPLETATA" ? `<span class="tag-none">senza tavolo</span>` : "");
+    return `<div onclick="openDetail('${b.id}')" class="booking-row ${dim ? 'dim' : ''}">
+      <div class="avatar-wrap">
+        <div class="avatar-ring ${grey ? 'cancelled' : ''}"><div class="avatar-inner">${initials(b.nome)}</div></div>
+        <div class="status-badge s-${st}"><span class="material-symbols-outlined" style="font-size:11px;">${STATUS_ICON[st] || "check"}</span></div>
+      </div>
+      <div class="book-info">
+        <div class="book-name-row"><span class="book-name">${esc(b.nome || "—")}</span><span class="book-time-badge">${esc(b.ora || "—")}</span></div>
+        <div class="book-sub">${b.data ? fmtDate(b.data) : "—"} · 👥 ${b.persone || "—"} ${b.salaNome ? "· 🏛️ " + esc(b.salaNome) : ""} ${tavolo}</div>
+      </div>
+      <span class="material-symbols-outlined chevron-icon">chevron_right</span>
+    </div>`;
+  }).join("");
+}
+function setMode(mode) {
+  activeDateMode = mode;
+  document.getElementById("clear-date-btn").classList.add("hidden");
+  document.getElementById("calendar-trigger-btn").classList.remove("hidden");
+  loadBookings(); updateDateUI();
+}
+function updateDateUI() {
+  ["btn-today", "btn-tomorrow", "btn-week"].forEach(id => document.getElementById(id).classList.remove("active"));
+  if (activeDateMode === "TODAY") document.getElementById("btn-today").classList.add("active");
+  if (activeDateMode === "TOMORROW") document.getElementById("btn-tomorrow").classList.add("active");
+  if (activeDateMode === "WEEK") document.getElementById("btn-week").classList.add("active");
+}
+function openDatePicker() { document.getElementById("date-hidden").showPicker(); }
+function onDateChange() {
+  const val = document.getElementById("date-hidden").value; if (!val) return;
+  customDate = val; activeDateMode = "CUSTOM";
+  ["btn-today", "btn-tomorrow", "btn-week"].forEach(id => document.getElementById(id).classList.remove("active"));
+  document.getElementById("calendar-trigger-btn").classList.add("hidden");
+  document.getElementById("clear-date-btn").classList.remove("hidden");
+  loadBookings();
+}
+function clearDate() { document.getElementById("date-hidden").value = ""; setMode("TODAY"); }
+function toggleStatusFilter() { document.getElementById("status-chips").classList.toggle("show"); }
+function selectStatus(btn) {
+  document.querySelectorAll("#status-chips .status-chip").forEach(c => c.classList.remove("chip-active"));
+  btn.classList.add("chip-active");
+  activeStatus = btn.getAttribute("data-status"); applyFilters();
+}
+async function loadStats() {
+  try {
+    const res = await apiFetch("/prenotazioni/statistiche");
+    if (res) renderStats(res.oggi ?? "0", res.settimana ?? "0", res.futuro ?? "0");
+  } catch (e) { renderStats("—", "—", "—"); }
+}
+function renderStats(oggi, settimana, futuro) {
+  document.getElementById("stats-row").innerHTML = `
+    <div class="stat-item"><span class="stat-value">${oggi}</span><span class="stat-label">Oggi</span></div>
+    <div class="stat-item"><span class="stat-value">${settimana}</span><span class="stat-label">Ultimi 7gg</span></div>
+    <div class="stat-item"><span class="stat-value">${futuro}</span><span class="stat-label">Future</span></div>`;
+}
+
+// ───────── MODAL ─────────
+function openModal(title) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal() { document.getElementById("modal-overlay").classList.remove("open"); }
+
+function openDetail(id) {
+  const b = findBooking(id); if (!b) return;
+  currentBooking = b;
+  const st = (b.status || "CONFERMATA").toUpperCase();
+  const grey = st === "CANCELLATA" || st === "NO_SHOW";
+  const canTable = isActive(b) && st !== "COMPLETATA";
+  const tv = b.tavoloId ? allTavoli.find(t => sameId(t.id, b.tavoloId)) : null;
+  document.getElementById("modal-body").innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+      <div class="avatar-ring ${grey ? 'cancelled' : ''}" style="width:58px;height:58px;"><div class="avatar-inner" style="font-size:19px;">${initials(b.nome)}</div></div>
+      <div>
+        <div style="font-size:17px;font-weight:700;color:var(--text-1);">${esc(b.nome)}</div>
+        <div style="font-size:12px;color:var(--text-2);margin-top:1px;">Prenotazione ${(STATUS_LABEL[st] || st).toLowerCase()}</div>
+      </div>
+    </div>
+    <div class="detail-row"><span class="detail-label">📅 Data</span><span class="detail-value">${fmtDate(b.data)}</span></div>
+    <div class="detail-row"><span class="detail-label">⏰ Orario</span><span class="detail-value">${esc(b.ora)} · ${b.durataMin || settings.durataDefaultMin} min</span></div>
+    <div class="detail-row"><span class="detail-label">👥 Persone</span><span class="detail-value">${b.persone} coperti</span></div>
+    <div class="detail-row"><span class="detail-label">🪑 Tavolo</span><span class="detail-value">${b.tavoloNome ? esc(b.tavoloNome) + (tv ? ` · ${tv.posti} posti` : "") : '<span style="color:var(--text-2);">Non assegnato</span>'}</span></div>
+    ${b.salaNome ? `<div class="detail-row"><span class="detail-label">🏛️ Sala</span><span class="detail-value">${esc(b.salaNome)}</span></div>` : ""}
+    <div class="detail-row"><span class="detail-label">🔖 Codice</span><span class="code-badge">${esc(b.codice)}</span></div>
+    <div class="detail-row"><span class="detail-label">📞 Telefono</span><span class="detail-value">${esc(b.telefono || "—")}</span></div>
+    <div class="detail-row"><span class="detail-label">✉️ Email</span><span class="detail-value">${esc(b.email || "—")}</span></div>
+    ${canTable ? `<button onclick="openAssign('${b.id}')" class="action-btn soft full" style="margin-top:14px;">
+      <span class="material-symbols-outlined" style="font-size:18px;">table_restaurant</span> ${b.tavoloId ? "Cambia tavolo" : "Assegna tavolo (facoltativo)"}</button>` : ""}`;
+
+  const btn = (cls, fn, label, icon) => `<button onclick="${fn}" class="action-btn ${cls}">${icon ? `<span class="material-symbols-outlined" style="font-size:17px;">${icon}</span>` : ""}${label}</button>`;
+  let acts = "";
+  if (st === "CONFERMATA") acts += btn("primary", `cambiaStatus('${b.id}','ARRIVATO')`, "Arrivato", "login") + btn("soft", `cambiaStatus('${b.id}','NO_SHOW')`, "No-show", "person_off") + btn("danger", `cambiaStatus('${b.id}','CANCELLATA')`, "Annulla");
+  else if (st === "ARRIVATO") acts += btn("primary", `cambiaStatus('${b.id}','COMPLETATA')`, "Completata", "done_all") + btn("danger", `cambiaStatus('${b.id}','CANCELLATA')`, "Annulla");
+  else acts += btn("restore", `cambiaStatus('${b.id}','CONFERMATA')`, "Ripristina", "undo");
+  if ((b.telefono || "").replace(/\D/g, "").length >= 7) acts += `<button onclick="openWA('${b.id}')" class="action-btn whatsapp"><span class="material-symbols-outlined" style="font-size:17px;">chat</span> WhatsApp</button>`;
+  document.getElementById("modal-actions").innerHTML = acts;
+  openModal("Dettaglio prenotazione");
+}
+async function cambiaStatus(id, nuovo) {
+  try {
+    const res = await apiFetch(`/prenotazioni/${id}/status`, { method: "PATCH", body: JSON.stringify({ status: nuovo }) });
+    mergeBooking({ ...(res || {}), id, status: nuovo });
+    closeModal(); refreshViews(); loadStats();
+  } catch (e) { alert(e.message || "Impossibile aggiornare lo stato."); }
+}
+
+// ───────── ASSEGNAZIONE TAVOLO ─────────
+async function openAssign(id) {
+  const b = findBooking(id); if (!b) return;
+  document.getElementById("modal-body").innerHTML = `<div class="sk" style="height:56px;margin-bottom:8px;"></div><div class="sk" style="height:56px;margin-bottom:8px;"></div><div class="sk" style="height:56px;"></div>`;
+  document.getElementById("modal-actions").innerHTML = "";
+  openModal(`Tavolo per ${b.nome?.split(" ")[0] || ""} · ${b.persone} pers. · ${b.ora}`);
+  let list = [];
+  try { list = await apiFetch(`/tavoli/disponibilita?data=${b.data}&ora=${encodeURIComponent(b.ora)}&persone=${b.persone}&durataMin=${b.durataMin || settings.durataDefaultMin}&escludi=${b.id}`) || []; } catch (e) {}
+  const rank = t => t.suggerito ? 0 : (t.libero && t.adatto) ? 1 : t.libero ? 2 : 3;
+  list.sort((a, c) => rank(a) - rank(c) || a.posti - c.posti);
+  const rows = list.map(t => {
+    const ok = t.libero;
+    const cur = sameId(t.id, b.tavoloId);
+    const sub = !t.libero ? `Occupato · ${esc(t.conflitto?.nome || "")} alle ${esc(t.conflitto?.ora || "")}` : !t.adatto ? `${t.posti} posti · troppo piccolo per ${b.persone}` : `${t.posti} posti${t.salaNome ? " · " + esc(t.salaNome) : ""}`;
+    return `<div class="assign-row ${t.suggerito ? "best" : ""} ${ok ? "" : "disabled"}" ${ok ? `onclick="assignTavolo('${b.id}','${t.id}')"` : ""}>
+      <div class="assign-ico">${esc(t.nome)}</div>
+      <div class="assign-main"><b>${esc(t.nome)}${cur ? " · attuale" : ""}</b><span>${sub}</span></div>
+      ${t.suggerito ? '<span class="best-badge">Consigliato</span>' : ""}
+    </div>`;
+  }).join("");
+  document.getElementById("modal-body").innerHTML = list.length ? rows : emptyState("Nessun tavolo configurato.<br>Aggiungili da Gestione → Tavoli.", "table_restaurant");
+  document.getElementById("modal-actions").innerHTML = b.tavoloId
+    ? `<button onclick="assignTavolo('${b.id}', null)" class="action-btn danger">Rimuovi tavolo</button><button onclick="openDetail('${b.id}')" class="action-btn soft">Indietro</button>`
+    : `<button onclick="openDetail('${b.id}')" class="action-btn soft">Lascia senza tavolo</button>`;
+}
+async function assignTavolo(bid, tid) {
+  try {
+    const res = await apiFetch(`/prenotazioni/${bid}/tavolo`, { method: "PATCH", body: JSON.stringify({ tavoloId: tid || null }) });
+    if (res) mergeBooking(res);
+    closeModal(); refreshViews();
+  } catch (e) { alert(e.message || "Impossibile assegnare il tavolo."); }
+}
+
+// ───────── NUOVA PRENOTAZIONE ─────────
+let newSlots = [], newSlotSeq = 0, newTblSeq = 0, newTblTimer = null;
+
+function showToast(msg) {
+  document.querySelectorAll(".app-toast").forEach(t => t.remove());
+  const t = document.createElement("div");
+  t.className = "app-toast"; t.setAttribute("role", "status"); t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+async function openNewModal() {
+  await loadLookups();
+  const activeTavoli = allTavoli.filter(t => t.enabled);
+  const saleAttive = allSale.filter(s => s.enabled);
+  const viewed = getDateParam();
+  const defaultDate = viewed && viewed >= todayISO() ? viewed : todayISO();
+
+  document.getElementById("modal-body").innerHTML = `
+    <form id="new-booking-form" onsubmit="saveNewBooking(event)">
+      <div class="form-group"><label class="form-label" for="add-nome">Nome cliente *</label>
+        <input type="text" id="add-nome" required maxlength="80" autocomplete="off" class="form-input" placeholder="Mario Rossi"/></div>
+      <div class="form-group"><label class="form-label" for="add-tel">Telefono *</label>
+        <input type="tel" id="add-tel" required inputmode="tel" autocomplete="off" pattern="[0-9+()\\s\\-]{6,20}" title="Solo numeri, almeno 6 cifre" class="form-input" placeholder="+39 333 1234567"/></div>
+      <div class="form-group"><label class="form-label" for="add-email">Email (facoltativa)</label>
+        <input type="email" id="add-email" autocomplete="off" class="form-input" placeholder="mario@email.com"/>
+        <div class="form-hint">Se la inserisci, il cliente riceve la conferma via email.</div></div>
+      <div class="form-group"><label class="form-label" for="add-data">Data *</label>
+        <input type="date" id="add-data" required min="${todayISO()}" value="${defaultDate}" class="form-input" onchange="loadNewSlots()"/></div>
+      ${!activeTavoli.length && saleAttive.length ? `<div class="form-group"><label class="form-label" for="add-sala">Sala</label>
+        <select id="add-sala" class="form-input" onchange="loadNewSlots()"><option value="">Nessuna / non specificata</option>
+        ${saleAttive.map(s => `<option value="${s.id}">${esc(s.nome)} (max ${s.capienza})</option>`).join("")}</select></div>` : ""}
+      <div class="form-group"><label class="form-label" for="add-persone">Persone *</label>
+        <div class="stepper">
+          <button type="button" onclick="stepPersone(-1)" aria-label="Meno persone">−</button>
+          <input type="number" id="add-persone" min="1" max="20" value="2" required class="form-input" oninput="onPersoneChange()"/>
+          <button type="button" onclick="stepPersone(1)" aria-label="Più persone">+</button>
+        </div></div>
+      <div class="form-group"><span class="form-label">Orario *</span><div id="add-slots"></div></div>
+      <div class="form-grid" style="margin-bottom:12px;">
+        <div class="form-group" style="margin-bottom:0;"><label class="form-label" for="add-durata">Durata (min)</label>
+          <input type="number" id="add-durata" min="15" max="480" step="15" value="${settings.durataDefaultMin}" class="form-input"/></div>
+        ${activeTavoli.length ? `<div class="form-group" style="margin-bottom:0;"><label class="form-label" for="add-tavolo">Tavolo</label>
+          <select id="add-tavolo" class="form-input" disabled><option value="">Scegli prima l'orario</option></select></div>` : ""}
+      </div>
+      <div id="add-error" class="form-error" role="alert"></div>
+    </form>`;
+  document.getElementById("new-booking-form").addEventListener("change", e => {
+    if (e.target.name === "add-ora" || e.target.id === "add-durata") loadNewTables();
+  });
+  document.getElementById("modal-actions").innerHTML =
+    `<button id="save-booking-btn" form="new-booking-form" type="submit" class="action-btn primary" style="flex:1;">Salva prenotazione</button>`;
+  openModal("Nuova prenotazione");
+  loadNewSlots();
+  setTimeout(() => document.getElementById("add-nome")?.focus(), 350);
+}
+
+function stepPersone(delta) {
+  const el = document.getElementById("add-persone"); if (!el) return;
+  el.value = clamp((parseInt(el.value) || 1) + delta, 1, 20);
+  onPersoneChange();
+}
+function onPersoneChange() { renderNewSlots(); loadNewTables(); }
+
+async function loadNewSlots() {
+  const box = document.getElementById("add-slots"); if (!box) return;
+  const data = document.getElementById("add-data").value;
+  if (!data) { box.innerHTML = `<div class="form-hint">Scegli una data per vedere gli orari.</div>`; return; }
+  const seq = ++newSlotSeq;
+  box.innerHTML = `<div class="slot-grid">${'<div class="sk" style="height:46px;"></div>'.repeat(8)}</div>`;
+  const salaId = document.getElementById("add-sala")?.value;
+  try {
+    const res = await apiFetch(`/disponibilita?localeId=${Auth.localeId()}&data=${data}${salaId ? `&salaId=${salaId}` : ""}`);
+    if (seq !== newSlotSeq || !document.getElementById("add-slots")) return;
+    newSlots = Array.isArray(res) ? res : [];
+    renderNewSlots(); loadNewTables();
+  } catch (e) {
+    if (seq !== newSlotSeq || !document.getElementById("add-slots")) return;
+    newSlots = [];
+    box.innerHTML = `<div class="form-hint" style="color:var(--danger);">${esc(e.message || "Impossibile caricare gli orari.")}</div>`;
+  }
+}
+
+function renderNewSlots() {
+  const box = document.getElementById("add-slots"); if (!box || !document.getElementById("add-data").value) return;
+  if (!newSlots.length) { box.innerHTML = `<div class="form-hint">Nessun orario configurato per questo giorno.</div>`; return; }
+  const persone = parseInt(document.getElementById("add-persone").value) || 1;
+  const prev = document.querySelector('input[name="add-ora"]:checked')?.value;
+  box.innerHTML = `<div class="slot-grid">` + newSlots.map(s => {
+    const rest = Math.max(0, (s.maxPerSlot || 0) - (s.prenotazioni || 0));
+    const off = !s.enabled || !s.disponibile || rest < persone;
+    const note = !s.enabled ? "chiuso" : rest <= 0 ? "pieno" : rest < persone ? `restano ${rest}` : `${rest} posti`;
+    return `<label class="slot-chip"><input type="radio" name="add-ora" value="${esc(s.ora)}" ${off ? "disabled" : ""} ${!off && s.ora === prev ? "checked" : ""}/><span>${esc(s.ora)}<small>${note}</small></span></label>`;
+  }).join("") + `</div>`;
+}
+
+// tavoli liberi per data/ora/durata scelti (con quello consigliato)
+function loadNewTables() { clearTimeout(newTblTimer); newTblTimer = setTimeout(doLoadNewTables, 200); }
+async function doLoadNewTables() {
+  const sel = document.getElementById("add-tavolo"); if (!sel) return;
+  const ora = document.querySelector('input[name="add-ora"]:checked')?.value;
+  const data = document.getElementById("add-data").value;
+  const prev = sel.value;
+  if (!ora || !data) { sel.innerHTML = `<option value="">Scegli prima l'orario</option>`; sel.disabled = true; return; }
+  const seq = ++newTblSeq;
+  const persone = parseInt(document.getElementById("add-persone").value) || 1;
+  const durata = parseInt(document.getElementById("add-durata").value) || settings.durataDefaultMin;
+  let list = [];
+  try { list = await apiFetch(`/tavoli/disponibilita?data=${data}&ora=${encodeURIComponent(ora)}&persone=${persone}&durataMin=${durata}`) || []; } catch (e) {}
+  if (seq !== newTblSeq || !document.getElementById("add-tavolo")) return;
+  const rank = t => t.suggerito ? 0 : (t.libero && t.adatto) ? 1 : t.libero ? 2 : 3;
+  list.sort((a, c) => rank(a) - rank(c) || a.posti - c.posti);
+  sel.disabled = false;
+  sel.innerHTML = `<option value="">Nessuno — lo assegno dopo</option>` + list.map(t => {
+    const note = !t.libero ? ` · occupato (${t.conflitto?.nome || ""} ${t.conflitto?.ora || ""})` : !t.adatto ? " · troppo piccolo" : t.suggerito ? " · consigliato" : "";
+    return `<option value="${t.id}" ${t.libero ? "" : "disabled"}>${esc(t.nome)} · ${t.posti} posti${t.salaNome ? " · " + esc(t.salaNome) : ""}${note}</option>`;
+  }).join("");
+  if (prev && list.some(t => sameId(t.id, prev) && t.libero)) sel.value = prev;
+}
+
+function showFormError(msg) {
+  const box = document.getElementById("add-error"); if (!box) return;
+  box.textContent = msg; box.style.display = "block";
+  box.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+async function saveNewBooking(e) {
+  e.preventDefault();
+  const btn = document.getElementById("save-booking-btn");
+  document.getElementById("add-error").style.display = "none";
+
+  const ora = document.querySelector('input[name="add-ora"]:checked')?.value;
+  if (!ora) { showFormError("Scegli un orario."); return; }
+
+  const emailVal = document.getElementById("add-email").value.trim();
+  const tavoloVal = document.getElementById("add-tavolo")?.value;
+  const salaVal = document.getElementById("add-sala")?.value;
+  const payload = {
+    localeId: Auth.localeId(),
+    nome: document.getElementById("add-nome").value.trim(),
+    telefono: document.getElementById("add-tel").value.trim(),
+    ...(emailVal && { email: emailVal }),
+    data: document.getElementById("add-data").value,
+    ora,
+    persone: parseInt(document.getElementById("add-persone").value),
+    durataMin: parseInt(document.getElementById("add-durata").value) || settings.durataDefaultMin,
+    ...(tavoloVal && { tavoloId: tavoloVal }),
+    ...(salaVal && { salaId: salaVal }),
+    privacyAccettata: true, trattamentoDatiAccettato: true
+  };
+
+  btn.disabled = true; btn.textContent = "Salvataggio…";
+  pendingManual = { nome: payload.nome, data: payload.data, ora: payload.ora };
+  let saved = null;
+  try {
+    saved = await apiFetch("/prenotazioni", { method: "POST", body: JSON.stringify(payload) });
+  } catch (err) {
+    pendingManual = null;
+    btn.disabled = false; btn.textContent = "Salva prenotazione";
+    let msg = err.message || "Impossibile salvare la prenotazione.";
+    if (err.status === 409) { msg += " Gli orari e i tavoli sono stati aggiornati."; loadNewSlots(); }
+    showFormError(msg);
+    return;
+  }
+  pendingManual = null;
+  if (!saved) { btn.disabled = false; btn.textContent = "Salva prenotazione"; showFormError("Impossibile salvare la prenotazione."); return; }
+
+  localCreatedIds.add(String(saved.id));
+  mergeBooking(saved);
+  closeModal();
+  showToast(`Prenotazione salvata: ${saved.nome}, ${fmtDate(saved.data)} alle ${saved.ora}`);
+  const viewed = getDateParam();
+  if (viewed && saved.data !== viewed) { // prenotazione su un altro giorno: mostra quel giorno
+    document.getElementById("date-hidden").value = saved.data;
+    onDateChange();
+  }
+  refreshViews(); loadStats();
+}
+
+// ───────── SALA LIVE ─────────
+const covers = (b, t) => toMin(b.ora) <= t && t < toMin(b.ora) + (b.durataMin || settings.durataDefaultMin);
+function occupies(b, t) {
+  if (!isActive(b) || !covers(b, t)) return false;
+  if (b.status === "COMPLETATA" && live.date === todayISO() && t >= nowMin()) return false;
+  return true;
+}
+function tableState(t, tm) {
+  if (!t.enabled) return { cls: "off" };
+  const busy = live.bookings.find(b => sameId(b.tavoloId, t.id) && occupies(b, tm));
+  if (busy) return { cls: busy.status === "ARRIVATO" ? "seated" : "busy", booking: busy };
+  const soon = live.bookings.find(b => sameId(b.tavoloId, t.id) && isActive(b) && b.status !== "COMPLETATA" && toMin(b.ora) > tm && toMin(b.ora) <= tm + 30);
+  if (soon) return { cls: "soon", booking: soon };
+  return { cls: "free" };
+}
+function tableW(t) { const w = t.posti <= 2 ? 13 : t.posti <= 4 ? 16 : t.posti <= 6 ? 20 : 24; return t.forma === "rettangolo" ? w + 4 : w; }
+function salaTabs(selected, fn) {
+  const tabs = allSale.map(s => ({ id: String(s.id), nome: s.nome }));
+  if (allTavoli.some(t => !t.salaId) && allSale.length) tabs.push({ id: "none", nome: "Senza sala" });
+  if (tabs.length < 2) return "";
+  return tabs.map(t => `<button class="status-chip ${String(selected) === t.id ? "chip-active" : ""}" onclick="${fn}('${t.id}')">${esc(t.nome)}</button>`).join("");
+}
+function tavoliInSala(sala) {
+  if (!allSale.length || sala == null) return allTavoli;
+  if (sala === "none") return allTavoli.filter(t => !t.salaId);
+  return allTavoli.filter(t => sameId(t.salaId, sala));
+}
+function defaultSala() { return allSale.length ? String(allSale[0].id) : null; }
+
+async function loadLive() {
+  await loadLookups();
+  if (live.sala == null) live.sala = defaultSala();
+  document.getElementById("live-date").value = live.date;
+  document.getElementById("live-range").value = live.time;
+  try { live.bookings = await apiFetch(`/prenotazioni?data=${live.date}`) || []; } catch (e) { live.bookings = []; }
+  live.bookings.forEach(b => { bookingCache[b.id] = b; });
+  renderLive();
+}
+function liveSetDate(v) { if (!v) return; live.date = v; loadLive(); }
+function liveShiftDay(n) { live.date = addDays(live.date, n); loadLive(); }
+function liveSetTime(v) { live.time = v; renderLive(); }
+function liveNow() {
+  live.date = todayISO(); live.time = clamp(Math.round(nowMin() / 30) * 30, SERVICE_START, SERVICE_END);
+  document.getElementById("live-range").value = live.time; loadLive();
+}
+function liveSetSala(id) { live.sala = id; renderLive(); }
+function liveSetView(v) { live.view = v; renderLive(); }
+
+function renderLive() {
+  const dateObj = new Date(live.date + "T12:00:00");
+  document.getElementById("live-day-label").textContent = dateObj.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+  document.getElementById("live-time-label").textContent = fromMin(live.time);
+  document.getElementById("live-sala-tabs").innerHTML = salaTabs(live.sala, "liveSetSala");
+  document.getElementById("seg-map").classList.toggle("active", live.view === "map");
+  document.getElementById("seg-tl").classList.toggle("active", live.view === "timeline");
+
+  const act = live.bookings.filter(isActive);
+  const coperti = act.reduce((s, b) => s + (+b.persone || 0), 0);
+  let peak = { t: 0, v: 0 };
+  for (let t = SERVICE_START; t <= SERVICE_END; t += 30) {
+    const v = act.filter(b => covers(b, t)).reduce((s, b) => s + (+b.persone || 0), 0);
+    if (v > peak.v) peak = { t, v };
+  }
+  const tavoli = tavoliInSala(live.sala).filter(t => t.enabled);
+  const free = tavoli.filter(t => ["free", "soon"].includes(tableState(t, live.time).cls)).length;
+  const unassigned = act.filter(b => b.status !== "COMPLETATA" && !b.tavoloId);
+  document.getElementById("live-kpis").innerHTML = `
+    <div class="kpi-mini"><b>${coperti}</b><span>Coperti</span></div>
+    <div class="kpi-mini"><b>${peak.v ? fromMin(peak.t) : "—"}</b><span>Picco${peak.v ? " · " + peak.v : ""}</span></div>
+    <div class="kpi-mini"><b>${free}/${tavoli.length}</b><span>Tavoli liberi</span></div>
+    <div class="kpi-mini"><b>${unassigned.length}</b><span>Senza tavolo</span></div>`;
+
+  document.getElementById("live-board").innerHTML = live.view === "map" ? floorHTML(tavoliInSala(live.sala), "live") : timelineHTML(tavoliInSala(live.sala));
+  document.getElementById("live-unassigned-count").textContent = unassigned.length ? `${unassigned.length}` : "";
+  const dnd = window.matchMedia("(hover:hover)").matches;
+  document.getElementById("live-unassigned").innerHTML = unassigned.length
+    ? unassigned.sort((a, b) => a.ora.localeCompare(b.ora)).map(b => `<button class="chip-b" ${dnd ? `draggable="true" ondragstart="dragBooking(event,'${b.id}')"` : ""} onclick="openDetail('${b.id}')"><b>${esc(b.ora)}</b> ${esc(b.nome)} · ${b.persone}</button>`).join("")
+    : `<p class="hint" style="margin:0;">Tutte le prenotazioni hanno un tavolo 🎉 (oppure hai scelto di lasciarle libere).</p>`;
+}
+
+function floorHTML(tavoli, mode) {
+  if (!tavoli.length) return `<div class="floor">${emptyState("Nessun tavolo in questa sala.<br>Aggiungili da Gestione → Tavoli.", "table_restaurant")}</div>`;
+  const items = tavoli.map(t => {
+    const w = tableW(t);
+    if (mode === "edit") {
+      return `<div class="tbl tbl-free ${t.forma} editable ${t.enabled ? "" : "tbl-off"}" style="left:${t.x}%;top:${t.y}%;--w:${w}%" onpointerdown="startDrag(event,'${t.id}')">
+        <span class="t-name">${esc(t.nome)}</span><span class="t-meta">👥 ${t.posti}</span></div>`;
+    }
+    const st = tableState(t, live.time);
+    const bk = st.booking;
+    const meta = bk ? `${esc(bk.nome.split(" ").slice(-1)[0])} · ${bk.persone}` : `👥 ${t.posti}`;
+    const sub = bk && st.cls === "soon" ? `<span class="t-meta">${esc(bk.ora)}</span>` : "";
+    return `<div class="tbl tbl-${st.cls} ${t.forma}" style="left:${t.x}%;top:${t.y}%;--w:${w}%" onclick="openTable('${t.id}')"
+      ondragover="event.preventDefault();this.classList.add('drop-hover')" ondragleave="this.classList.remove('drop-hover')" ondrop="dropOnTable(event,'${t.id}')">
+      <span class="t-name">${esc(t.nome)}</span><span class="t-meta">${meta}</span>${sub}</div>`;
+  }).join("");
+  return `<div class="floor">${items}</div>`;
+}
+function timelineHTML(tavoli) {
+  if (!tavoli.length) return `<div class="tl-wrap">${emptyState("Nessun tavolo in questa sala.", "table_restaurant")}</div>`;
+  const H0 = 12, H1 = 24, HW = 64, total = (H1 - H0) * HW;
+  const hours = Array.from({ length: H1 - H0 }, (_, i) => `<div class="tl-hour" style="left:${i * HW}px;width:${HW}px;">${H0 + i}</div>`).join("");
+  const px = m => (m - H0 * 60) / 60 * HW;
+  const nowLeft = px(live.time);
+  const rows = tavoli.map(t => {
+    const bars = live.bookings.filter(b => sameId(b.tavoloId, t.id) && isActive(b)).map(b => {
+      const s = toMin(b.ora), d = b.durataMin || settings.durataDefaultMin;
+      const cls = b.status === "ARRIVATO" ? "seated" : b.status === "COMPLETATA" ? "done" : "";
+      return `<div class="tl-bar ${cls}" style="left:${px(s)}px;width:${Math.max(24, d / 60 * HW - 3)}px" onclick="openDetail('${b.id}')">${esc(b.nome.split(" ").slice(-1)[0])} · ${b.persone}</div>`;
+    }).join("");
+    return `<div class="tl-row"><div class="tl-label">${esc(t.nome)}<small>👥 ${t.posti}</small></div><div class="tl-track" style="width:${total}px;--hw:${HW}px;${t.enabled ? "" : "opacity:.4;"}">${bars}</div></div>`;
+  }).join("");
+  return `<div class="tl-wrap"><div class="tl" style="width:${74 + total}px;">
+    <div class="tl-head"><div class="tl-label" style="font-weight:700;color:var(--text-2);">Tavolo</div><div class="tl-track" style="width:${total}px;--hw:${HW}px;">${hours}</div></div>
+    ${rows}<div class="tl-now" style="left:${74 + nowLeft}px"></div></div></div>`;
+}
+
+function dragBooking(ev, id) { ev.dataTransfer.setData("text/plain", id); ev.dataTransfer.effectAllowed = "move"; }
+async function dropOnTable(ev, tid) {
+  ev.preventDefault(); ev.currentTarget.classList.remove("drop-hover");
+  const id = ev.dataTransfer.getData("text/plain"); if (!id) return;
+  const b = findBooking(id), t = allTavoli.find(x => sameId(x.id, tid));
+  if (b && t && t.posti < b.persone && !confirm(`${t.nome} ha ${t.posti} posti ma la prenotazione è per ${b.persone}. Assegnare comunque?`)) return;
+  assignTavolo(id, tid);
+}
+function openTable(tid) {
+  const t = allTavoli.find(x => sameId(x.id, tid)); if (!t) return;
+  const st = tableState(t, live.time);
+  const mine = live.bookings.filter(b => sameId(b.tavoloId, t.id) && isActive(b)).sort((a, b) => a.ora.localeCompare(b.ora));
+  const cand = live.bookings.filter(b => isActive(b) && b.status !== "COMPLETATA" && !b.tavoloId && b.persone <= t.posti)
+    .filter(b => !mine.some(m => toMin(m.ora) < toMin(b.ora) + (b.durataMin || settings.durataDefaultMin) && toMin(b.ora) < toMin(m.ora) + (m.durataMin || settings.durataDefaultMin)))
+    .sort((a, b) => Math.abs(toMin(a.ora) - live.time) - Math.abs(toMin(b.ora) - live.time));
+  const bkRow = b => `<div class="assign-row" onclick="openDetail('${b.id}')"><div class="assign-ico">${esc(b.ora)}</div><div class="assign-main"><b>${esc(b.nome)}</b><span>${b.persone} persone · ${STATUS_LABEL[b.status] || b.status}</span></div><span class="material-symbols-outlined chevron-icon">chevron_right</span></div>`;
+  document.getElementById("modal-body").innerHTML = `
+    <div class="detail-row" style="padding-top:0;"><span class="detail-label">Posti</span><span class="detail-value">${t.posti} · ${t.forma}</span></div>
+    <div class="detail-row"><span class="detail-label">Alle ${fromMin(live.time)}</span><span class="detail-value">${st.cls === "free" ? "🟢 Libero" : st.cls === "soon" ? "🟠 In arrivo" : st.cls === "seated" ? "🟢 Cliente seduto" : st.cls === "busy" ? "🟣 Prenotato" : "Disabilitato"}</span></div>
+    <div class="section-title" style="margin:16px 0 8px;">Prenotazioni su questo tavolo</div>
+    ${mine.length ? mine.map(bkRow).join("") : `<p class="hint" style="margin:0 0 6px;">Nessuna prenotazione assegnata in questa data.</p>`}
+    ${t.enabled ? `<div class="section-title" style="margin:16px 0 8px;">Assegna una prenotazione</div>
+    ${cand.length ? cand.map(b => `<div class="assign-row" onclick="assignTavolo('${b.id}','${t.id}')"><div class="assign-ico">${esc(b.ora)}</div><div class="assign-main"><b>${esc(b.nome)}</b><span>${b.persone} persone · senza tavolo</span></div><span class="material-symbols-outlined" style="color:var(--accent);">add_circle</span></div>`).join("") : `<p class="hint" style="margin:0;">Nessuna prenotazione senza tavolo compatibile con ${t.nome}.</p>`}` : ""}`;
+  document.getElementById("modal-actions").innerHTML = "";
+  openModal(`${t.nome}${t.salaNome ? " · " + t.salaNome : ""}`);
+}
+
+// ───────── STATISTICHE ─────────
+function setStatsRange(n) {
+  statsRange = n;
+  document.querySelectorAll("#stats-seg button").forEach((b, i) => b.classList.toggle("active", [7, 30, 90][i] === n));
+  loadStatsPage();
+}
+const deltaPill = v => v == null ? "" : `<span class="delta ${v >= 0 ? "up" : "down"}">${v >= 0 ? "▲" : "▼"} ${Math.abs(v)}% vs prec.</span>`;
+async function loadStatsPage() {
+  const el = document.getElementById("stats-content");
+  el.innerHTML = `<div class="kpi-grid">${'<div class="sk" style="height:92px;border-radius:14px;"></div>'.repeat(4)}</div>`;
+  let s;
+  try { s = await apiFetch(`/statistiche?giorni=${statsRange}`); } catch (e) { s = null; }
+  if (!s) { el.innerHTML = emptyState("Errore nel caricamento delle statistiche", "wifi_off"); return; }
+  const t = s.totali, o = s.occupazione;
+  const kpi = (v, l, d) => `<div class="kpi"><div class="k-val">${v}</div><div class="k-lbl">${l}</div>${d || ""}</div>`;
+  const maxC = Math.max(1, ...s.perGiorno.map(d => d.coperti));
+  const few = s.perGiorno.length <= 14, today = todayISO();
+  const bars = s.perGiorno.map((d, i) => {
+    const dt = new Date(d.data + "T12:00:00");
+    const lbl = few ? `${DOW[(dt.getDay() + 6) % 7][0]}${dt.getDate()}` : (i % Math.ceil(s.perGiorno.length / 6) === 0 ? `${dt.getDate()}/${dt.getMonth() + 1}` : "");
+    return `<div class="bar-col" title="${fmtDate(d.data)} · ${d.coperti} coperti"><span class="bar-val">${few ? d.coperti : ""}</span><div class="bar ${d.data === today ? "today" : ""}" style="height:${Math.max(2, d.coperti / maxC * 100 - (few ? 18 : 0))}%"></div><span class="bar-lbl">${lbl}</span></div>`;
+  }).join("");
+  const hm = s.heatmap, hmMax = Math.max(0.1, ...hm.righe.flat());
+  const cols = hm.slots.length;
+  const heat = `<div class="heat" style="grid-template-columns:30px repeat(${cols},1fr);">
+    <div></div>${hm.slots.map(sl => `<div class="h-col">${sl.endsWith(":00") ? sl.slice(0, 2) : ""}</div>`).join("")}
+    ${hm.righe.map((r, d) => `<div class="h-lbl">${DOW[d]}</div>` + r.map((v, c) => `<div class="h-cell" style="--a:${(v / hmMax * 0.95 + (v ? 0.05 : 0)).toFixed(2)}" title="${DOW[d]} ${hm.slots[c]} · media ${v} coperti"></div>`).join("")).join("")}
+  </div>`;
+  const gMax = Math.max(1, ...Object.values(s.gruppi));
+  const gruppi = Object.entries(s.gruppi).map(([k, v]) => `<div class="hbar"><span class="hb-lbl">${k} pers.</span><div class="hb-track"><div class="hb-fill" style="width:${v / gMax * 100}%"></div></div><span class="hb-val">${v}</span></div>`).join("");
+  const clienti = s.topClienti.length ? s.topClienti.map(c => `<div class="cust-row"><div class="mini">${initials(c.nome)}</div><div class="c-main"><b>${esc(c.nome)}</b><span>${esc(c.telefono)} · ${c.coperti} coperti</span></div><span class="c-vis">${c.visite}×</span></div>`).join("") : `<p class="hint">Nessun dato nel periodo.</p>`;
+  el.innerHTML = `<div class="stack">
+    <div class="kpi-grid">
+      ${kpi(t.coperti, "Coperti", deltaPill(s.confronto.coperti))}
+      ${kpi(t.prenotazioni, "Prenotazioni", deltaPill(s.confronto.prenotazioni))}
+      ${kpi(t.mediaGruppo, "Persone per tavolo")}
+      ${kpi(t.clientiRicorrenti, "Clienti ricorrenti")}
+      ${kpi(t.noShowPct + "%", "No-show")}
+      ${kpi(t.cancellazioniPct + "%", "Cancellazioni")}
+    </div>
+    <div class="card"><div class="card-title">Occupazione</div><div class="card-sub">Posti riempiti per fascia · e prenotazioni con tavolo assegnato</div>
+      <div class="rings">
+        <div><div class="ring" style="--p:${o.pranzo}"><span>${o.pranzo}%</span></div><div class="ring-lbl">Pranzo</div></div>
+        <div><div class="ring" style="--p:${o.cena}"><span>${o.cena}%</span></div><div class="ring-lbl">Cena</div></div>
+        <div><div class="ring" style="--p:${o.conTavolo}"><span>${o.conTavolo}%</span></div><div class="ring-lbl">Con tavolo</div></div>
+      </div></div>
+    <div class="card"><div class="card-title">Coperti per giorno</div><div class="card-sub">Ultimi ${s.giorni} giorni · oggi evidenziato</div><div class="bars">${bars}</div></div>
+    <div class="card"><div class="card-title">Orari di punta</div><div class="card-sub">Media coperti per giorno della settimana e fascia oraria</div>${heat}</div>
+    <div class="card"><div class="card-title">Dimensione dei gruppi</div><div class="card-sub">Numero di prenotazioni per gruppo</div>${gruppi}</div>
+    <div class="card"><div class="card-title">Clienti più fedeli</div><div class="card-sub">Per numero di prenotazioni nel periodo</div>${clienti}</div>
+  </div>`;
+}
+
+// ───────── GESTIONE ─────────
+function gestSub(sub) {
+  gest.sub = sub;
+  ["orari", "sale", "tavoli"].forEach(k => {
+    document.getElementById("g-" + k).classList.toggle("hidden", k !== sub);
+    document.getElementById("gt-" + k).classList.toggle("active", k === sub);
+  });
+  if (sub === "orari") loadSlots(); else if (sub === "sale") loadSale(); else loadTavoliAdmin();
+}
+
+// Orari
+async function loadSlots() {
+  const localeId = Auth.localeId();
+  const container = document.getElementById("slots-container");
+  await ensureSaleForFilter();
+  try {
+    const dateVal = document.getElementById("orari-date-picker").value || todayISO();
+    const salaId = document.getElementById("orari-sala-picker").value;
+    const res = await apiFetch(`/disponibilita?localeId=${localeId}&data=${dateVal}${salaId ? `&salaId=${salaId}` : ""}`);
+    if (!Array.isArray(res) || res.length === 0) { container.innerHTML = `<div style="text-align:center;padding:40px 0;font-size:13px;color:var(--text-2);">Nessuno slot configurato.</div>`; return; }
+    allSlots = res.map(s => ({ id: s.id ?? s.slotId, ora: s.ora, attivo: s.attivo ?? s.enabled ?? false, personePrenotate: s.personePrenotate ?? s.persone ?? s.prenotazioni ?? 0, maxPerSlot: s.maxPerSlot ?? 0 }));
+    renderSlots();
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px 0;font-size:13px;color:var(--danger);">Errore nel caricamento degli slot.</div>`; }
+}
+async function ensureSaleForFilter() {
+  await loadLookups();
+  const picker = document.getElementById("orari-sala-picker");
+  if (allSale.length) {
+    const cur = picker.value;
+    picker.innerHTML = `<option value="">Tutte le sale (vista aggregata)</option>` + allSale.map(s => `<option value="${s.id}">${esc(s.nome)}</option>`).join("");
+    picker.value = cur; picker.classList.remove("hidden");
+  } else picker.classList.add("hidden");
+}
+function renderSlots() {
+  const container = document.getElementById("slots-container");
+  if (!allSlots.length) { container.innerHTML = `<div style="text-align:center;padding:40px 0;font-size:13px;color:var(--text-2);">Nessuno slot disponibile.</div>`; return; }
+  container.innerHTML = allSlots.map(slot => `
+    <div class="slot-row">
+      <div><div class="slot-time">${esc(slot.ora || "—")}</div><div class="slot-pax">👥 ${slot.personePrenotate}/${slot.maxPerSlot} persone</div></div>
+      <div class="toggle-track ${slot.attivo ? "on" : "off"}" onclick="toggleSlotStatus('${slot.id}')"><div class="toggle-thumb"></div></div>
+    </div>`).join("");
+}
+async function toggleSlotStatus(slotId) {
+  try { await apiFetch(`/disponibilita/toggle/${encodeURIComponent(slotId)}`, { method: "POST" }); await loadSlots(); } catch (e) { console.error(e); }
+}
+
+// Sale
+async function loadSale() {
+  const container = document.getElementById("sale-container");
+  container.innerHTML = `<div class="sk" style="height:60px;border-radius:14px;margin-bottom:10px;"></div><div class="sk" style="height:60px;border-radius:14px;"></div>`;
+  try { await loadLookups(true); renderSale(); }
+  catch (e) { container.innerHTML = `<div style="text-align:center;padding:30px 0;font-size:13px;color:var(--danger);">Errore nel caricamento delle sale.</div>`; }
+}
+function renderSale() {
+  const container = document.getElementById("sale-container");
+  if (!allSale.length) { container.innerHTML = `<div style="text-align:center;padding:40px 0;font-size:13px;color:var(--text-2);">Nessuna sala configurata.<br>Se non aggiungi sale, la disponibilità resta gestita a livello di locale come oggi.</div>`; return; }
+  container.innerHTML = allSale.map(s => `
+    <div class="sala-card ${s.enabled ? "" : "disabled"}">
+      <div><div class="sala-name">${esc(s.nome)}</div><div class="sala-cap">👥 Capienza massima: ${s.capienza} persone</div></div>
+      <div class="sala-actions">
+        <button class="sala-icon-btn" onclick="editSala('${s.id}')" title="Modifica"><span class="material-symbols-outlined" style="font-size:16px;">edit</span></button>
+        <div class="toggle-track ${s.enabled ? "on" : "off"}" onclick="toggleSalaEnabled('${s.id}', ${!s.enabled})"><div class="toggle-thumb"></div></div>
+        <button class="sala-icon-btn" onclick="deleteSala('${s.id}')" title="Elimina"><span class="material-symbols-outlined" style="font-size:16px;color:var(--danger);">delete</span></button>
+      </div>
+    </div>`).join("");
+}
+function openNewSalaModal() {
+  document.getElementById("modal-body").innerHTML = `
+    <form id="new-sala-form" onsubmit="saveNewSala(event)">
+      <div class="form-group"><label class="form-label">Nome sala *</label><input type="text" id="sala-nome" required class="form-input" placeholder="Sala interna, Terrazza, Veranda…"/></div>
+      <div class="form-group"><label class="form-label">Capienza massima (persone) *</label><input type="number" id="sala-capienza" min="1" value="20" required class="form-input"/></div>
+    </form>`;
+  document.getElementById("modal-actions").innerHTML = `<button form="new-sala-form" type="submit" class="action-btn primary" style="flex:1;">Crea sala</button>`;
+  openModal("Nuova sala");
+}
+async function saveNewSala(e) {
+  e.preventDefault();
+  const payload = { localeId: Auth.localeId(), nome: document.getElementById("sala-nome").value.trim(), capienza: parseInt(document.getElementById("sala-capienza").value) };
+  try { const res = await apiFetch("/sale", { method: "POST", body: JSON.stringify(payload) }); if (res) { closeModal(); await loadSale(); } }
+  catch (err) { alert("Errore durante la creazione della sala."); }
+}
+function editSala(id) {
+  const sala = allSale.find(s => sameId(s.id, id)); if (!sala) return;
+  document.getElementById("modal-body").innerHTML = `
+    <form id="edit-sala-form" onsubmit="saveEditSala(event,'${id}')">
+      <div class="form-group"><label class="form-label">Nome sala *</label><input type="text" id="edit-sala-nome" required class="form-input" value="${esc(sala.nome)}"/></div>
+      <div class="form-group"><label class="form-label">Capienza massima (persone) *</label><input type="number" id="edit-sala-capienza" min="1" required class="form-input" value="${sala.capienza}"/></div>
+    </form>`;
+  document.getElementById("modal-actions").innerHTML = `<button form="edit-sala-form" type="submit" class="action-btn primary" style="flex:1;">Salva modifiche</button>`;
+  openModal("Modifica sala");
+}
+async function saveEditSala(e, id) {
+  e.preventDefault();
+  const payload = { nome: document.getElementById("edit-sala-nome").value.trim(), capienza: parseInt(document.getElementById("edit-sala-capienza").value) };
+  try { const res = await apiFetch(`/sale/${id}`, { method: "PATCH", body: JSON.stringify(payload) }); if (res) { closeModal(); await loadSale(); } }
+  catch (err) { alert("Errore durante il salvataggio."); }
+}
+async function toggleSalaEnabled(id, nuovo) {
+  try { await apiFetch(`/sale/${id}`, { method: "PATCH", body: JSON.stringify({ enabled: nuovo }) }); await loadSale(); } catch (e) { console.error(e); }
+}
+async function deleteSala(id) {
+  if (!confirm("Eliminare questa sala? Le prenotazioni esistenti collegate resteranno visibili ma la sala non sarà più selezionabile.")) return;
+  try { await apiFetch(`/sale/${id}`, { method: "DELETE" }); await loadSale(); }
+  catch (e) { alert("Impossibile eliminare la sala (potrebbe avere prenotazioni collegate)."); }
+}
+
+// Tavoli (editor mappa)
+async function loadTavoliAdmin() {
+  await loadLookups(true);
+  if (gest.sala == null) gest.sala = defaultSala();
+  document.getElementById("set-durata").value = settings.durataDefaultMin;
+  renderGestFloor();
+}
+function renderGestFloor() {
+  document.getElementById("gest-sala-tabs").innerHTML = salaTabs(gest.sala, "gestSetSala");
+  document.getElementById("gest-floor").innerHTML = floorHTML(tavoliInSala(gest.sala), "edit");
+}
+function gestSetSala(id) { gest.sala = id; renderGestFloor(); }
+async function saveDurata(v) {
+  const n = clamp(parseInt(v) || 90, 30, 360);
+  settings.durataDefaultMin = n; document.getElementById("set-durata").value = n;
+  try { await apiFetch("/locale/impostazioni", { method: "PATCH", body: JSON.stringify({ durataDefaultMin: n }) }); } catch (e) { alert("Impossibile salvare la durata."); }
+}
+function startDrag(e, id) {
+  const el = e.currentTarget, floor = el.parentElement, rect = floor.getBoundingClientRect();
+  const sx = e.clientX, sy = e.clientY; let moved = false, x = null, y = null;
+  el.setPointerCapture(e.pointerId);
+  const mv = ev => {
+    if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 6) moved = true;
+    if (!moved) return;
+    x = clamp((ev.clientX - rect.left) / rect.width * 100, 6, 94);
+    y = clamp((ev.clientY - rect.top) / rect.height * 100, 6, 94);
+    el.style.left = x + "%"; el.style.top = y + "%";
+  };
+  const up = async () => {
+    el.removeEventListener("pointermove", mv); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up);
+    if (!moved) { openTavoloModal(id); return; }
+    x = Math.round(x * 10) / 10; y = Math.round(y * 10) / 10;
+    const t = allTavoli.find(z => sameId(z.id, id)); if (t) { t.x = x; t.y = y; }
+    try { await apiFetch(`/tavoli/${id}`, { method: "PATCH", body: JSON.stringify({ x, y }) }); } catch (err) { alert("Impossibile salvare la posizione."); }
+  };
+  el.addEventListener("pointermove", mv); el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+}
+function openTavoloModal(id) {
+  const t = id ? allTavoli.find(z => sameId(z.id, id)) : null;
+  const salaSel = allSale.length ? `<div class="form-group"><label class="form-label">Sala</label><select id="tv-sala" class="form-input"><option value="">Nessuna</option>${allSale.map(s => `<option value="${s.id}" ${sameId(s.id, t ? t.salaId : gest.sala) ? "selected" : ""}>${esc(s.nome)}</option>`).join("")}</select></div>` : "";
+  document.getElementById("modal-body").innerHTML = `
+    <form id="tv-form" onsubmit="saveTavolo(event,${id ? `'${id}'` : "null"})">
+      <div class="form-grid" style="margin-bottom:12px;">
+        <div class="form-group" style="margin-bottom:0;"><label class="form-label">Nome *</label><input type="text" id="tv-nome" required class="form-input" placeholder="T10" value="${t ? esc(t.nome) : ""}"/></div>
+        <div class="form-group" style="margin-bottom:0;"><label class="form-label">Posti *</label><input type="number" id="tv-posti" min="1" required class="form-input" value="${t ? t.posti : 4}"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Forma</label><select id="tv-forma" class="form-input">
+        ${["tondo", "quadrato", "rettangolo"].map(f => `<option value="${f}" ${(t ? t.forma : "quadrato") === f ? "selected" : ""}>${f[0].toUpperCase() + f.slice(1)}</option>`).join("")}</select></div>
+      ${salaSel}
+      ${t ? `<div class="detail-row" style="border:none;padding:6px 0;"><span class="detail-label">Tavolo attivo</span><div class="toggle-track ${t.enabled ? "on" : "off"}" id="tv-en" data-on="${t.enabled ? 1 : 0}" onclick="this.dataset.on=this.dataset.on==='1'?'0':'1';this.className='toggle-track '+(this.dataset.on==='1'?'on':'off')"><div class="toggle-thumb"></div></div></div>` : ""}
+    </form>`;
+  document.getElementById("modal-actions").innerHTML = (t ? `<button onclick="deleteTavolo('${t.id}')" class="action-btn danger">Elimina</button>` : "") + `<button form="tv-form" type="submit" class="action-btn primary">${t ? "Salva" : "Crea tavolo"}</button>`;
+  openModal(t ? `Modifica ${t.nome}` : "Nuovo tavolo");
+}
+async function saveTavolo(e, id) {
+  e.preventDefault();
+  const body = {
+    nome: document.getElementById("tv-nome").value.trim(),
+    posti: parseInt(document.getElementById("tv-posti").value),
+    forma: document.getElementById("tv-forma").value,
+    salaId: document.getElementById("tv-sala") ? (document.getElementById("tv-sala").value || null) : null
+  };
+  try {
+    if (id) { body.enabled = document.getElementById("tv-en").dataset.on === "1"; await apiFetch(`/tavoli/${id}`, { method: "PATCH", body: JSON.stringify(body) }); }
+    else await apiFetch("/tavoli", { method: "POST", body: JSON.stringify({ ...body, localeId: Auth.localeId(), x: 50, y: 50, enabled: true }) });
+    closeModal(); await loadTavoliAdmin();
+  } catch (err) { alert("Errore durante il salvataggio del tavolo."); }
+}
+async function deleteTavolo(id) {
+  if (!confirm("Eliminare il tavolo? Le prenotazioni collegate resteranno, ma senza tavolo.")) return;
+  try { await apiFetch(`/tavoli/${id}`, { method: "DELETE" }); closeModal(); await loadTavoliAdmin(); }
+  catch (e) { alert("Impossibile eliminare il tavolo."); }
+}
+
+// ───────── NAVIGAZIONE ─────────
+function switchTab(tab) {
+  currentTab = tab;
+  ["prenotazioni", "live", "stats", "gestione"].forEach(k => {
+    document.getElementById("section-" + k).classList.toggle("hidden", k !== tab);
+    document.getElementById("nav-" + k).classList.toggle("active", k === tab);
+  });
+  document.getElementById("fab-new").classList.toggle("hidden", tab !== "prenotazioni");
+  window.scrollTo({ top: 0 });
+  if (tab === "prenotazioni") { loadStats(); loadBookings(); }
+  else if (tab === "live") { liveNow(); }
+  else if (tab === "stats") loadStatsPage();
+  else if (tab === "gestione") gestSub(gest.sub);
+}
+
+// ───────── EXPORT / NOTIFICHE / WHATSAPP ─────────
+function exportExcel() {
+  if (!filteredBookings.length) return alert("Nessun dato da esportare.");
+  const data = filteredBookings.map(b => ({ "Data": b.data, "Ora": b.ora, "Durata (min)": b.durataMin || "", "Cliente": b.nome, "Coperti": b.persone, "Telefono": b.telefono || "", "Sala": b.salaNome || "", "Tavolo": b.tavoloNome || "", "Email": b.email || "", "Codice": b.codice, "Stato": b.status }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Prenotazioni");
+  XLSX.writeFile(wb, `Preenota_Prenotazioni_${todayISO()}.xlsx`);
+}
+function showBookingToast(booking) {
+  document.querySelectorAll(".booking-toast").forEach(t => t.remove());
+  const hasTel = booking.telefono && booking.telefono.length >= 7;
+  const toast = document.createElement("div");
+  toast.className = "booking-toast";
+  toast.style.cssText = "position:fixed;bottom:76px;left:50%;transform:translateX(-50%);z-index:9999;min-width:280px;max-width:340px;animation:toastIn .35s cubic-bezier(.16,1,.3,1);";
+  toast.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;box-shadow:var(--shadow-md);">
+      <div style="width:38px;height:38px;border-radius:50%;flex-shrink:0;background:var(--ig-gradient);display:flex;align-items:center;justify-content:center;font-size:16px;">🍽</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Nuova prenotazione</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.5;">
+          <strong style="color:var(--text-1);">${esc(booking.nome || "—")}</strong> · ${esc(String(booking.persone || "—"))} pers.<br>
+          📅 ${fmtDate(booking.data)} · ${esc(booking.ora)}${booking.salaNome ? "<br>🏛️ " + esc(booking.salaNome) : ""}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button onclick="this.closest('.booking-toast').remove();openDetail('${booking.id}')" style="padding:6px 12px;border-radius:8px;background:var(--border);border:none;color:var(--text-1);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">Apri / assegna tavolo</button>
+          ${hasTel ? `<button onclick="openWA('${booking.id}')" style="padding:6px 12px;border-radius:8px;background:#25D366;border:none;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">Conferma WA</button>` : ""}
+        </div>
+      </div>
+      <button onclick="this.closest('.booking-toast').remove()" style="background:none;border:none;color:var(--text-2);font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;">×</button>
+    </div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => { if (toast.parentNode) { toast.style.animation = "toastOut .3s ease forwards"; setTimeout(() => toast.remove(), 300); } }, 8000);
+}
+function playNotificationSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const tone = (f, s, d, v = 0.2) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g); g.connect(ctx.destination); o.type = "sine"; o.frequency.setValueAtTime(f, s); g.gain.setValueAtTime(v, s); g.gain.exponentialRampToValueAtTime(0.001, s + d); o.start(s); o.stop(s + d); };
+    const t = ctx.currentTime; tone(880, t, 0.15); tone(1108, t + 0.10, 0.18); tone(1320, t + 0.20, 0.30);
+  } catch (e) {}
+}
+function openWA(id) {
+  const b = findBooking(id); if (!b) return;
+  const tel = (b.telefono || "").replace(/\D/g, ""); if (!tel) return;
+  let phone = tel; if (!phone.startsWith("39") && phone.length === 10) phone = "39" + phone;
+  const text = `Ciao ${b.nome}, ti confermiamo la prenotazione:\n\n📅 ${fmtDate(b.data)} alle ${b.ora}\n👥 ${b.persone} persone\n🔖 Codice: ${b.codice}${b.salaNome ? "\n🏛️ " + b.salaNome : ""}\n\nCi vediamo presto! 🍽`;
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+}
+function logout() {
+  if (typeof unregisterPushSubscription === "function") unregisterPushSubscription().finally(() => { Auth.clear(); window.location.replace("/login.html"); });
+  else { Auth.clear(); window.location.replace("/login.html"); }
+}
+</script>
+</body>
+</html>

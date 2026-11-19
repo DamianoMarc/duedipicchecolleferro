@@ -1,0 +1,4 @@
+[
+  { "categoria": "Antipasti", "nome": "NOME PIATTO DI ESEMPIO", "descrizione": "Descrizione breve degli ingredienti", "prezzo": 10, "ordine": 1, "disponibile": true },
+  { "categoria": "Primi", "nome": "ALTRO PIATTO DI ESEMPIO", "descrizione": "", "prezzo": 12.5, "ordine": 2, "disponibile": true }
+]

@@ -1,0 +1,14 @@
+[
+  {"categoria":"Antipasti","nome":"Esempio – Tagliere di salumi","descrizione":"Selezione di salumi e formaggi del territorio","prezzo":14.00,"ordine":1,"allergeni":["latte"],
+   "translations":{"en":{"name":"Example – Charcuterie board","description":"Selection of local cured meats and cheeses"},"fr":{"name":"Exemple – Planche de charcuterie","description":"Sélection de charcuteries et fromages locaux"}}},
+  {"categoria":"Antipasti","nome":"Esempio – Bruschette miste","descrizione":"Pomodoro fresco, crema di olive, patè di fegatini","prezzo":8.00,"ordine":2,"allergeni":["glutine"],
+   "translations":{"en":{"name":"Example – Mixed bruschetta","description":"Fresh tomato, olive cream, chicken liver pâté"}}},
+  {"categoria":"Primi","nome":"Esempio – Tonnarello cacio e pepe","descrizione":"Pecorino romano e pepe nero","prezzo":12.00,"ordine":3,"allergeni":["glutine","latte"],
+   "translations":{"en":{"name":"Example – Tonnarello cacio e pepe","description":"Pecorino romano and black pepper"}}},
+  {"categoria":"Primi","nome":"Esempio – Amatriciana","descrizione":"Guanciale, pomodoro, pecorino","prezzo":12.00,"ordine":4,"allergeni":["glutine","latte"]},
+  {"categoria":"Secondi","nome":"Esempio – Tagliata di manzo","descrizione":"Con rucola e scaglie di grana","prezzo":20.00,"ordine":5,"allergeni":["latte"]},
+  {"categoria":"Secondi","nome":"Esempio – Costolette d'agnello","descrizione":"Alla piastra","prezzo":18.50,"ordine":6},
+  {"categoria":"Contorni","nome":"Esempio – Patate al forno","prezzo":5.00,"ordine":7,"allergeni":["vegano"]},
+  {"categoria":"Dolci","nome":"Esempio – Tiramisù","descrizione":"Fatto in casa","prezzo":6.00,"ordine":8,"allergeni":["uova","latte","glutine"],
+   "translations":{"en":{"name":"Example – Tiramisù","description":"Homemade"}}}
+]

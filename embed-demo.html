@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo embed menu-widget</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:860px;margin:0 auto;padding:24px 16px;background:#e9e7e3;color:#222}
+h2{margin:36px 0 10px;font-size:18px}code{background:#fff;padding:2px 6px;border-radius:4px}
+.box{border-radius:14px;overflow:hidden;border:1px solid #ccc}
+pre{background:#fff;padding:14px;border-radius:10px;overflow-x:auto;font-size:13px}
+</style>
+</head>
+<body>
+<h1>Esempi di integrazione</h1>
+<p>Tema e lingua si cambiano dai controlli in alto nel widget; la scelta viene ricordata.</p>
+
+<h2>1. Automatico (segue il telefono), dati da file JSON, traduzioni incluse</h2>
+<div class="box">
+  <div data-menu-widget data-source="json" data-url="menu.sample.json" data-title="Menù" data-title-en="Menu" data-title-de="Speisekarte" data-title-es="Carta"></div>
+</div>
+
+<h2>2. Tema chiaro fisso, accento personalizzato, solo IT/EN, tavolo da URL (<code>?t=7</code>)</h2>
+<div class="box">
+  <div data-menu-widget data-source="inline" data-inline="#dati" data-title="Trattoria Demo"
+       data-theme="light" data-accent="#b4452d" data-langs="it,en" data-search="false"></div>
+</div>
+<script type="application/json" id="dati">
+{"categories":[
+ {"name":"Antipasti","items":[{"name":"Esempio – Burrata","price":9,"description":"Con pomodorini","description_en":"With cherry tomatoes","allergeni":["latte"]}]},
+ {"name":"Secondi","items":[{"name":"Esempio – Cotoletta","price":15}]},
+ {"name":"Dolci","items":[{"name":"Esempio – Panna cotta","price":5,"allergeni":["latte"]}]}
+]}
+</script>
+
+<h2>3. Supabase (multi-ristorante con filtro)</h2>
+<pre>&lt;div data-menu-widget
+     data-source="supabase"
+     data-supabase-url="https://xxxx.supabase.co"
+     data-supabase-key="sb_publishable_..."
+     data-select="*"
+     data-filter="ristorante_id=eq.12"&gt;&lt;/div&gt;</pre>
+
+<script src="menu-widget.js" defer></script>
+</body>
+</html>

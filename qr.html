@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Generatore QR per i tavoli</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--red:#b3202a}
+*{box-sizing:border-box}
+body{font-family:'Avenir Next',Avenir,Jost,'Helvetica Neue',system-ui,sans-serif;margin:0;padding:20px 16px 40px;background:#f1efeb;color:#151312}
+.panel{max-width:760px;margin:0 auto 28px;display:grid;gap:14px}
+h1{font:500 32px/1.1 'Cormorant Garamond',Georgia,serif;margin:0}
+label{display:grid;gap:5px;font-size:14px;font-weight:600}
+input{width:100%;min-height:46px;padding:0 12px;border:1px solid #bdb8b0;border-radius:10px;font:inherit;font-weight:400;background:#fff}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+button{min-height:48px;border:0;border-radius:10px;background:var(--red);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+small{color:#5d5852;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;max-width:1000px;margin:0 auto}
+.card{background:#fff;border:1px dashed #9b958c;border-radius:14px;padding:22px 18px;text-align:center;break-inside:avoid;page-break-inside:avoid}
+.card img{width:54px;height:54px;border-radius:50%;margin:0 auto 10px;display:block}
+.card h3{margin:0;font:600 26px/1.1 'Cormorant Garamond',Georgia,serif}
+.card .qr{display:flex;justify-content:center;margin:14px 0 10px}
+.card p{margin:0;font-size:13px;color:#3b3732;line-height:1.4}
+.card small{display:block;margin-top:8px;font-size:10px;color:#8a847a;word-break:break-all}
+@media print{body{background:#fff;padding:0}.panel{display:none}.grid{grid-template-columns:repeat(2,1fr);gap:10px}.card{border-color:#999}}
+</style>
+</head>
+<body>
+<div class="panel">
+  <h1>QR per i tavoli</h1>
+  <label>Indirizzo della pagina menù
+    <input id="url" inputmode="url" value="https://unicorestaurant.netlify.app/"></label>
+  <div class="row">
+    <label>Numero di tavoli<input id="n" type="number" min="0" max="200" value="12"></label>
+    <label>Titolo (QR generico)<input id="title" value="UNICO Restaurant"></label>
+    <label>Parametro tavolo<input id="param" value="t"></label>
+  </div>
+  <button id="go">Genera</button>
+  <small>Con 0 tavoli genera un solo QR generico. Poi Stampa → Salva come PDF (2 card per riga). I vecchi QR verso tavolo.html continuano a funzionare.</small>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+function gen(){
+  var base=document.getElementById("url").value.trim(), n=+document.getElementById("n").value||0,
+      title=document.getElementById("title").value, param=document.getElementById("param").value.trim()||"t",
+      grid=document.getElementById("grid"); grid.innerHTML="";
+  var items=n>0?Array.from({length:n},function(_,i){return i+1;}):[null];
+  items.forEach(function(t){
+    var link=base; if(t!==null){ link+=(base.indexOf("?")>-1?"&":"?")+encodeURIComponent(param)+"="+t; }
+    var c=document.createElement("div"); c.className="card";
+    c.innerHTML='<img src="logounico.png" alt=""><h3></h3><div class="qr"></div><p>Inquadra per vedere il menù<br>Scan to view the menu</p><small></small>';
+    c.querySelector("h3").textContent=(t!==null?"Tavolo "+t:title);
+    c.querySelector("small").textContent=link;
+    grid.appendChild(c);
+    new QRCode(c.querySelector(".qr"),{text:link,width:160,height:160,correctLevel:QRCode.CorrectLevel.M});
+  });
+}
+document.getElementById("go").onclick=gen;
+gen();
+</script>
+</body>
+</html>

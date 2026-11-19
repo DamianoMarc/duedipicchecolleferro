@@ -1,0 +1,264 @@
+/* =========================================================
+   COOKIE BANNER
+========================================================= */
+
+#unico-cookie-banner {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 99999;
+    background: #fff;
+    color: #222;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.20);
+    max-width: 760px;
+    margin: auto;
+    font-family: inherit;
+    display: none;
+}
+
+#unico-cookie-banner h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+#unico-cookie-banner p {
+    margin: 0 0 15px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+#unico-cookie-banner p a,
+.unico-cookie-modal-box p a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.unico-cookie-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.unico-cookie-buttons button {
+    border: 0;
+    border-radius: 10px;
+    padding: 11px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+}
+
+#unico-cookie-accept {
+    background: #222;
+    color: white;
+}
+
+#unico-cookie-reject {
+    background: #eee;
+    color: #222;
+}
+
+#unico-cookie-settings {
+    background: transparent;
+    color: #222;
+    border: 1px solid #ccc !important;
+}
+
+
+/* =========================================================
+   COOKIE PREFERENCES MODAL
+========================================================= */
+
+#unico-cookie-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 100000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.unico-cookie-modal-box {
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.3);
+}
+
+.unico-cookie-modal-box h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.unico-cookie-modal-box > p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.unico-cookie-option {
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 12px;
+}
+
+.unico-cookie-option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.unico-cookie-option h4 {
+    margin: 0 0 5px;
+}
+
+.unico-cookie-option p {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.unico-cookie-toggle {
+    width: 45px;
+    height: 25px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.unico-cookie-toggle input {
+    display: none;
+}
+
+.unico-cookie-slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.unico-cookie-slider:before {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: .2s;
+}
+
+.unico-cookie-toggle input:checked + .unico-cookie-slider {
+    background: #222;
+}
+
+.unico-cookie-toggle input:checked + .unico-cookie-slider:before {
+    transform: translateX(20px);
+}
+
+.unico-cookie-required {
+    font-size: 12px;
+    color: #777;
+}
+
+.unico-cookie-modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.unico-cookie-modal-buttons button {
+    flex: 1;
+    border: 0;
+    border-radius: 10px;
+    padding: 13px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#unico-cookie-save {
+    background: #222;
+    color: #fff;
+}
+
+#unico-cookie-close {
+    background: #eee;
+}
+
+
+/* =========================================================
+   PRIVACY SETTINGS LINK (footer)
+========================================================= */
+
+#unico-privacy-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   PARITÀ DI RILIEVO Accetta / Rifiuta (Linee guida Garante 2021)
+========================================================= */
+
+#unico-cookie-accept,
+#unico-cookie-reject {
+    background: #222;
+    color: #fff;
+    border: 1px solid #222;
+}
+
+#unico-cookie-banner { padding-right: 52px; }
+
+#unico-cookie-x {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: transparent;
+    color: #222;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* =========================================================
+   MAPPA CLICK-TO-LOAD
+========================================================= */
+
+.map-consent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 36px 24px;
+    min-height: 260px;
+    background: rgba(255,255,255,.06);
+    border-radius: 12px;
+}
+
+.map-consent p { max-width: 520px; margin: 0; font-size: 14px; line-height: 1.5; }
+.map-consent-link { color: inherit; font-size: 13px; text-decoration: underline; }

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menù | UNICO Restaurant Valmontone</title>
+<meta name="description" content="Il menù di UNICO Restaurant a Valmontone: antipasti, primi, secondi, dolci e bevande.">
+<meta name="robots" content="noindex, nofollow"><!-- togliere in produzione se la pagina deve comparire su Google -->
+<meta name="theme-color" content="#0e0d0c">
+<link rel="icon" type="image/png" href="logounico.png">
+<link rel="apple-touch-icon" href="logounico.png">
+<script>
+/* tema applicato prima del rendering: niente lampo bianco */
+try{var t=localStorage.getItem("mw_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}
+</script>
+<style>
+:root{--bg:#fbfaf8;--ink:#151312;--dim:rgba(21,19,18,.72);--line:rgba(21,19,18,.15);--soft:#f2f0ec;--red:#b3202a;color-scheme:light;
+  --serif:'Cormorant Garamond','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:Jost,'Avenir Next',Avenir,'Helvetica Neue',system-ui,sans-serif}
+[data-theme=dark]{--bg:#0e0d0c;--ink:#f2ece1;--dim:rgba(242,236,225,.72);--line:rgba(242,236,225,.15);--soft:#151312;--red:#d4373f;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.stripe{height:4px;background:#b3202a}
+.head{padding:30px 20px 6px;text-align:center}
+.head img{width:104px;height:104px;margin:0 auto;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+.head h1{margin-top:20px;font-family:var(--serif);font-weight:500;font-size:clamp(38px,10vw,54px);line-height:1}
+.head h1::after{content:"";display:block;width:34px;height:2px;margin:16px auto 0;background:var(--red)}
+.meta{margin-top:14px;font-size:14px;color:var(--dim)}
+.meta span{display:block}
+
+/* azioni: barra fissa sul telefono, in linea da tablet in su */
+.actions{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+.actions a{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--line);border-radius:12px;font-size:14px;font-weight:500;text-decoration:none}
+.actions a.primary{background:#b3202a;border-color:#b3202a;color:#fff}
+body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+@media (min-width:640px){
+  body{padding-bottom:0}
+  .actions{position:static;display:flex;justify-content:center;gap:10px;margin-top:22px;padding:0;background:none;border:0}
+  .actions a{padding:0 24px}
+  .actions a:not(.primary):hover{border-color:var(--red)}
+  .actions a.primary:hover{background:#8e1820}
+}
+
+main{padding:0 0 12px}
+.wrap{max-width:760px;margin:0 auto}
+.note{padding:6px 20px 0;font-size:13px;color:var(--dim);text-align:center}
+footer{margin-top:28px;padding:26px 20px 36px;border-top:1px solid var(--line);background:var(--soft);font-size:13px;color:var(--dim);text-align:center}
+footer p+p{margin-top:6px}
+footer a{text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+@media (max-width:639px){footer{padding-bottom:calc(36px + env(safe-area-inset-bottom))}}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+
+<header class="head">
+  <img src="logounico.png" width="104" height="104" alt="Logo UNICO Restaurant">
+  <h1 data-i="menu">Menù</h1>
+  <p class="meta"><span>Via Porta Napoletana 1, Valmontone</span><span data-i="hours">Aperti ogni sera dalle 19:00</span></p>
+  <nav class="actions" aria-label="Contatti">
+    <a class="primary" href="https://preenota.it/r/DUEDIPICCHE" data-i="book">Prenota un tavolo</a>
+    <a href="tel:+393314100134" data-i="call">Chiama</a>
+    <a id="wa" href="https://wa.me/393314100134" target="_blank" rel="noopener">WhatsApp</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <div data-menu-widget
+         data-source="supabase"
+         data-supabase-url="https://udvdgozontyttoeaijph.supabase.co"
+         data-supabase-key="sb_publishable_nsS-CkirN0jwrJjsGwsncw_Hya8h2Ak"
+         data-table="piatti"
+         data-select="*"
+         data-theme="auto"
+         data-accent="#b3202a"
+         data-sticky-top="0px"
+         data-error="Impossibile caricare il menù al momento. Chiamaci al +39 331 410 0134."
+         data-error-en="The menu cannot be loaded right now. Please call us on +39 331 410 0134."
+         data-error-fr="Impossible de charger le menu. Appelez-nous au +39 331 410 0134."
+         data-error-de="Die Speisekarte kann gerade nicht geladen werden. Rufen Sie uns an: +39 331 410 0134."
+         data-error-es="No se puede cargar la carta. Llámanos al +39 331 410 0134."></div>
+    <p class="note" data-i="note">Il menù può variare in base alla disponibilità stagionale degli ingredienti. Per allergie e intolleranze chiedi pure al nostro staff.</p>
+  </div>
+</main>
+
+<footer>
+  <p>© <span id="yr">2026</span> UNICO Restaurant · P.IVA 15828001006</p>
+  <p>Via Porta Napoletana 1, 00038 Valmontone (RM) · <a href="tel:+393314100134">+39 331 410 0134</a></p>
+  <p><a href="privacy.html" data-i="privacy">Privacy e cookie</a></p>
+</footer>
+
+<!-- Deve stare PRIMA di menu-widget.js: ascolta gli eventi lingua/tema che il widget emette all'avvio -->
+<script>
+(function(){
+  var T={
+    it:{menu:"Menù",hours:"Aperti ogni sera dalle 19:00",book:"Prenota un tavolo",call:"Chiama",privacy:"Privacy e cookie",
+        note:"Il menù può variare in base alla disponibilità stagionale degli ingredienti. Per allergie e intolleranze chiedi pure al nostro staff.",
+        wa:"Ciao UNICO RESTAURANT, vorrei prenotare un tavolo"},
+    en:{menu:"Menu",hours:"Open every evening from 7 pm",book:"Book a table",call:"Call",privacy:"Privacy & cookies",
+        note:"The menu may vary according to the seasonal availability of ingredients. For allergies and intolerances, please ask our staff.",
+        wa:"Hello UNICO RESTAURANT, I would like to book a table"},
+    fr:{menu:"Menu",hours:"Ouvert tous les soirs dès 19h",book:"Réserver une table",call:"Appeler",privacy:"Confidentialité et cookies",
+        note:"Le menu peut varier selon la disponibilité saisonnière des ingrédients. Pour allergies et intolérances, demandez à notre équipe.",
+        wa:"Bonjour UNICO RESTAURANT, je voudrais réserver une table"},
+    de:{menu:"Speisekarte",hours:"Jeden Abend ab 19 Uhr geöffnet",book:"Tisch reservieren",call:"Anrufen",privacy:"Datenschutz & Cookies",
+        note:"Die Speisekarte kann je nach saisonaler Verfügbarkeit der Zutaten variieren. Bei Allergien und Unverträglichkeiten fragen Sie bitte unser Personal.",
+        wa:"Hallo UNICO RESTAURANT, ich möchte einen Tisch reservieren"},
+    es:{menu:"Carta",hours:"Abierto todas las noches desde las 19:00",book:"Reservar mesa",call:"Llamar",privacy:"Privacidad y cookies",
+        note:"La carta puede variar según la disponibilidad estacional de los ingredientes. Para alergias e intolerancias, pregunta a nuestro personal.",
+        wa:"Hola UNICO RESTAURANT, quisiera reservar una mesa"}
+  };
+  document.addEventListener("menu:lang",function(e){
+    var l=e.detail.lang,t=T[l]||T.it;
+    document.documentElement.lang=l;
+    [].forEach.call(document.querySelectorAll("[data-i]"),function(n){n.textContent=t[n.dataset.i]});
+    document.getElementById("wa").href="https://wa.me/393314100134?text="+encodeURIComponent(t.wa);
+    document.title=t.menu+" | UNICO Restaurant Valmontone";
+  });
+  document.addEventListener("menu:theme",function(e){
+    document.documentElement.dataset.theme=e.detail.theme;
+    document.querySelector('meta[name=theme-color]').content=e.detail.theme==="dark"?"#0e0d0c":"#fbfaf8";
+  });
+  document.getElementById("yr").textContent=new Date().getFullYear();
+})();
+</script>
+<script src="menu-widget.js" defer></script>
+</body>
+</html>

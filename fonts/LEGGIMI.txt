@@ -1,0 +1,4 @@
+Metti qui gli 8 file woff2 con questi nomi esatti:
+cormorant-garamond-400.woff2  cormorant-garamond-500.woff2  cormorant-garamond-600.woff2  cormorant-garamond-700.woff2
+inter-300.woff2  inter-400.woff2  inter-500.woff2  inter-600.woff2
+(download da gwfh.mranftl.com/fonts, subset "latin", solo woff2)

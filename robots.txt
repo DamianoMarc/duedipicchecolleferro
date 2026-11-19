@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+# Crawler di assistenti AI e motori di risposta: consentiti (il sito è pubblico e vuole essere citato)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://unicorestaurant.netlify.app/sitemap.xml
