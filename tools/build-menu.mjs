@@ -18,7 +18,7 @@ const input = process.argv[2];
 const target = process.argv[3] || path.join(root, "menu.html");
 if (!input) { console.error("Uso: node tools/build-menu.mjs piatti.json|piatti.csv [menu.html]"); process.exit(1); }
 
-const BASE = "https://unicorestaurant.netlify.app";
+const BASE = "https://DUE DI PICCHErestaurant.netlify.app";
 const ORDER = ["Antipasti", "Primi", "Secondi", "Contorni", "Dolci"];
 const PHOTO = { Antipasti: "antipasti", Primi: "primi", Secondi: "secondi", Dolci: "dolci" };
 

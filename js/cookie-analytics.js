@@ -20,10 +20,10 @@
        Iniettato qui così non va duplicato in ogni pagina.
     ===================================================== */
 
-    const UNICO_UI_HTML = `
+    const DUE DI PICCHE_UI_HTML = `
 <!-- COOKIE BANNER -->
-<div id="unico-cookie-banner" role="dialog" aria-label="Privacy">
-    <button id="unico-cookie-x" type="button" aria-label="Chiudi senza accettare">&times;</button>
+<div id="DUE DI PICCHE-cookie-banner" role="dialog" aria-label="Privacy">
+    <button id="DUE DI PICCHE-cookie-x" type="button" aria-label="Chiudi senza accettare">&times;</button>
     <h3>La tua privacy è importante</h3>
     <p>
         Questo sito usa solo lo storage tecnico necessario al suo
@@ -35,16 +35,16 @@
         <a href="privacy.html" target="_blank" rel="noopener">Informativa Privacy &amp; Cookie</a>
         o gestisci le tue scelte qui sotto.
     </p>
-    <div class="unico-cookie-buttons">
-        <button id="unico-cookie-accept" type="button">Accetta</button>
-        <button id="unico-cookie-reject" type="button">Rifiuta</button>
-        <button id="unico-cookie-settings" type="button">Personalizza</button>
+    <div class="DUE DI PICCHE-cookie-buttons">
+        <button id="DUE DI PICCHE-cookie-accept" type="button">Accetta</button>
+        <button id="DUE DI PICCHE-cookie-reject" type="button">Rifiuta</button>
+        <button id="DUE DI PICCHE-cookie-settings" type="button">Personalizza</button>
     </div>
 </div>
 
 <!-- COOKIE SETTINGS MODAL -->
-<div id="unico-cookie-modal">
-    <div class="unico-cookie-modal-box">
+<div id="DUE DI PICCHE-cookie-modal">
+    <div class="DUE DI PICCHE-cookie-modal-box">
         <h2>Impostazioni privacy</h2>
         <p>
             Puoi scegliere quali categorie consentire e modificare la scelta
@@ -52,17 +52,17 @@
             cosa viene raccolto, perché e per quanto tempo, consulta l'
             <a href="privacy.html" target="_blank" rel="noopener">Informativa Privacy &amp; Cookie</a>.
         </p>
-        <div class="unico-cookie-option">
-            <div class="unico-cookie-option-header">
+        <div class="DUE DI PICCHE-cookie-option">
+            <div class="DUE DI PICCHE-cookie-option-header">
                 <div>
                     <h4>Necessari</h4>
                     <p>Servono al funzionamento del sito e a ricordare le tue scelte. Nessun dato personale.</p>
                 </div>
-                <span class="unico-cookie-required">Sempre attivi</span>
+                <span class="DUE DI PICCHE-cookie-required">Sempre attivi</span>
             </div>
         </div>
-        <div class="unico-cookie-option">
-            <div class="unico-cookie-option-header">
+        <div class="DUE DI PICCHE-cookie-option">
+            <div class="DUE DI PICCHE-cookie-option-header">
                 <div>
                     <h4>Statistiche</h4>
                     <p>
@@ -72,26 +72,26 @@
                         posizione, nessun ID persistente. Puoi cambiare idea in qualsiasi momento.
                     </p>
                 </div>
-                <label class="unico-cookie-toggle">
-                    <input type="checkbox" id="unico-analytics-consent" aria-label="Statistiche">
-                    <span class="unico-cookie-slider"></span>
+                <label class="DUE DI PICCHE-cookie-toggle">
+                    <input type="checkbox" id="DUE DI PICCHE-analytics-consent" aria-label="Statistiche">
+                    <span class="DUE DI PICCHE-cookie-slider"></span>
                 </label>
             </div>
         </div>
-        <div class="unico-cookie-modal-buttons">
-            <button id="unico-cookie-close" type="button">Annulla</button>
-            <button id="unico-cookie-save" type="button">Salva preferenze</button>
+        <div class="DUE DI PICCHE-cookie-modal-buttons">
+            <button id="DUE DI PICCHE-cookie-close" type="button">Annulla</button>
+            <button id="DUE DI PICCHE-cookie-save" type="button">Salva preferenze</button>
         </div>
     </div>
 </div>
 
 <!-- PRIVACY SETTINGS BUTTON -->
-<button id="unico-privacy-button" title="Impostazioni privacy" aria-label="Impostazioni privacy" type="button">
+<button id="DUE DI PICCHE-privacy-button" title="Impostazioni privacy" aria-label="Impostazioni privacy" type="button">
     ⚙️ Impostazioni privacy
 </button>
 `;
 
-    document.body.insertAdjacentHTML("beforeend", UNICO_UI_HTML);
+    document.body.insertAdjacentHTML("beforeend", DUE DI PICCHE_UI_HTML);
 
 
     /* Il pulsante delle impostazioni privacy va accanto al link
@@ -101,7 +101,7 @@
     (function placePrivacyButton() {
 
         const button =
-            document.getElementById("unico-privacy-button");
+            document.getElementById("DUE DI PICCHE-privacy-button");
 
         const footerText =
             document.querySelector("footer .footer-bottom > span");
@@ -144,16 +144,16 @@
     const STORAGE = {
 
         consent:
-            "unico_privacy_consent_v3",
+            "DUE DI PICCHE_privacy_consent_v3",
 
         consentTs:
-            "unico_privacy_consent_ts_v3",
+            "DUE DI PICCHE_privacy_consent_ts_v3",
 
         analytics:
-            "unico_analytics_enabled_v3",
+            "DUE DI PICCHE_analytics_enabled_v3",
 
         session:
-            "unico_session_id"
+            "DUE DI PICCHE_session_id"
 
     };
 
@@ -163,15 +163,15 @@
 
     const LEGACY_KEYS = [
 
-        "unico_privacy_consent_v2",
-        "unico_analytics_enabled_v2",
+        "DUE DI PICCHE_privacy_consent_v2",
+        "DUE DI PICCHE_analytics_enabled_v2",
 
-        "unico_privacy_consent",
-        "unico_analytics_enabled",
-        "unico_location_enabled",
-        "unico_nearby_last_shown",
-        "unico_visitor_id",
-        "unico_analytics_events"
+        "DUE DI PICCHE_privacy_consent",
+        "DUE DI PICCHE_analytics_enabled",
+        "DUE DI PICCHE_location_enabled",
+        "DUE DI PICCHE_nearby_last_shown",
+        "DUE DI PICCHE_visitor_id",
+        "DUE DI PICCHE_analytics_events"
 
     ];
 
@@ -196,31 +196,31 @@
     ===================================================== */
 
     const banner =
-        document.getElementById("unico-cookie-banner");
+        document.getElementById("DUE DI PICCHE-cookie-banner");
 
     const modal =
-        document.getElementById("unico-cookie-modal");
+        document.getElementById("DUE DI PICCHE-cookie-modal");
 
     const acceptButton =
-        document.getElementById("unico-cookie-accept");
+        document.getElementById("DUE DI PICCHE-cookie-accept");
 
     const rejectButton =
-        document.getElementById("unico-cookie-reject");
+        document.getElementById("DUE DI PICCHE-cookie-reject");
 
     const settingsButton =
-        document.getElementById("unico-cookie-settings");
+        document.getElementById("DUE DI PICCHE-cookie-settings");
 
     const saveButton =
-        document.getElementById("unico-cookie-save");
+        document.getElementById("DUE DI PICCHE-cookie-save");
 
     const closeButton =
-        document.getElementById("unico-cookie-close");
+        document.getElementById("DUE DI PICCHE-cookie-close");
 
     const analyticsCheckbox =
-        document.getElementById("unico-analytics-consent");
+        document.getElementById("DUE DI PICCHE-analytics-consent");
 
     const privacyButton =
-        document.getElementById("unico-privacy-button");
+        document.getElementById("DUE DI PICCHE-privacy-button");
 
 
     /* =====================================================
@@ -378,7 +378,7 @@
     );
 
 
-    document.getElementById("unico-cookie-x").addEventListener(
+    document.getElementById("DUE DI PICCHE-cookie-x").addEventListener(
         "click",
         function () {
             saveConsent(false);

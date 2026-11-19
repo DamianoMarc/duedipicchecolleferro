@@ -2,7 +2,7 @@
    COOKIE BANNER
 ========================================================= */
 
-#unico-cookie-banner {
+#DUE DI PICCHE-cookie-banner {
     position: fixed;
     left: 20px;
     right: 20px;
@@ -19,30 +19,30 @@
     display: none;
 }
 
-#unico-cookie-banner h3 {
+#DUE DI PICCHE-cookie-banner h3 {
     margin: 0 0 8px;
     font-size: 20px;
 }
 
-#unico-cookie-banner p {
+#DUE DI PICCHE-cookie-banner p {
     margin: 0 0 15px;
     line-height: 1.5;
     font-size: 14px;
 }
 
-#unico-cookie-banner p a,
-.unico-cookie-modal-box p a {
+#DUE DI PICCHE-cookie-banner p a,
+.DUE DI PICCHE-cookie-modal-box p a {
     color: inherit;
     text-decoration: underline;
 }
 
-.unico-cookie-buttons {
+.DUE DI PICCHE-cookie-buttons {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
 }
 
-.unico-cookie-buttons button {
+.DUE DI PICCHE-cookie-buttons button {
     border: 0;
     border-radius: 10px;
     padding: 11px 18px;
@@ -51,17 +51,17 @@
     font-family: inherit;
 }
 
-#unico-cookie-accept {
+#DUE DI PICCHE-cookie-accept {
     background: #222;
     color: white;
 }
 
-#unico-cookie-reject {
+#DUE DI PICCHE-cookie-reject {
     background: #eee;
     color: #222;
 }
 
-#unico-cookie-settings {
+#DUE DI PICCHE-cookie-settings {
     background: transparent;
     color: #222;
     border: 1px solid #ccc !important;
@@ -72,7 +72,7 @@
    COOKIE PREFERENCES MODAL
 ========================================================= */
 
-#unico-cookie-modal {
+#DUE DI PICCHE-cookie-modal {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.55);
@@ -83,7 +83,7 @@
     padding: 20px;
 }
 
-.unico-cookie-modal-box {
+.DUE DI PICCHE-cookie-modal-box {
     background: #fff;
     width: 100%;
     max-width: 600px;
@@ -94,54 +94,54 @@
     box-shadow: 0 20px 70px rgba(0,0,0,.3);
 }
 
-.unico-cookie-modal-box h2 {
+.DUE DI PICCHE-cookie-modal-box h2 {
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.unico-cookie-modal-box > p {
+.DUE DI PICCHE-cookie-modal-box > p {
     font-size: 14px;
     line-height: 1.5;
     color: #555;
 }
 
-.unico-cookie-option {
+.DUE DI PICCHE-cookie-option {
     border: 1px solid #ddd;
     border-radius: 14px;
     padding: 16px;
     margin-top: 12px;
 }
 
-.unico-cookie-option-header {
+.DUE DI PICCHE-cookie-option-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
 }
 
-.unico-cookie-option h4 {
+.DUE DI PICCHE-cookie-option h4 {
     margin: 0 0 5px;
 }
 
-.unico-cookie-option p {
+.DUE DI PICCHE-cookie-option p {
     margin: 0;
     color: #666;
     font-size: 13px;
     line-height: 1.4;
 }
 
-.unico-cookie-toggle {
+.DUE DI PICCHE-cookie-toggle {
     width: 45px;
     height: 25px;
     position: relative;
     flex-shrink: 0;
 }
 
-.unico-cookie-toggle input {
+.DUE DI PICCHE-cookie-toggle input {
     display: none;
 }
 
-.unico-cookie-slider {
+.DUE DI PICCHE-cookie-slider {
     position: absolute;
     inset: 0;
     background: #ccc;
@@ -150,7 +150,7 @@
     transition: .2s;
 }
 
-.unico-cookie-slider:before {
+.DUE DI PICCHE-cookie-slider:before {
     content: "";
     position: absolute;
     width: 19px;
@@ -162,26 +162,26 @@
     transition: .2s;
 }
 
-.unico-cookie-toggle input:checked + .unico-cookie-slider {
+.DUE DI PICCHE-cookie-toggle input:checked + .DUE DI PICCHE-cookie-slider {
     background: #222;
 }
 
-.unico-cookie-toggle input:checked + .unico-cookie-slider:before {
+.DUE DI PICCHE-cookie-toggle input:checked + .DUE DI PICCHE-cookie-slider:before {
     transform: translateX(20px);
 }
 
-.unico-cookie-required {
+.DUE DI PICCHE-cookie-required {
     font-size: 12px;
     color: #777;
 }
 
-.unico-cookie-modal-buttons {
+.DUE DI PICCHE-cookie-modal-buttons {
     display: flex;
     gap: 10px;
     margin-top: 20px;
 }
 
-.unico-cookie-modal-buttons button {
+.DUE DI PICCHE-cookie-modal-buttons button {
     flex: 1;
     border: 0;
     border-radius: 10px;
@@ -190,12 +190,12 @@
     font-weight: 600;
 }
 
-#unico-cookie-save {
+#DUE DI PICCHE-cookie-save {
     background: #222;
     color: #fff;
 }
 
-#unico-cookie-close {
+#DUE DI PICCHE-cookie-close {
     background: #eee;
 }
 
@@ -204,7 +204,7 @@
    PRIVACY SETTINGS LINK (footer)
 ========================================================= */
 
-#unico-privacy-button {
+#DUE DI PICCHE-privacy-button {
     background: none;
     border: 0;
     padding: 0;
@@ -220,16 +220,16 @@
    PARITÀ DI RILIEVO Accetta / Rifiuta (Linee guida Garante 2021)
 ========================================================= */
 
-#unico-cookie-accept,
-#unico-cookie-reject {
+#DUE DI PICCHE-cookie-accept,
+#DUE DI PICCHE-cookie-reject {
     background: #222;
     color: #fff;
     border: 1px solid #222;
 }
 
-#unico-cookie-banner { padding-right: 52px; }
+#DUE DI PICCHE-cookie-banner { padding-right: 52px; }
 
-#unico-cookie-x {
+#DUE DI PICCHE-cookie-x {
     position: absolute;
     top: 10px;
     right: 12px;

@@ -31,7 +31,7 @@ small{color:#5d5852;line-height:1.5}
 <div class="panel">
   <h1>QR per i tavoli</h1>
   <label>Indirizzo della pagina menù
-    <input id="url" inputmode="url" value="https://unicorestaurant.netlify.app/"></label>
+    <input id="url" inputmode="url" value="https://DUE DI PICCHErestaurant.netlify.app/"></label>
   <div class="row">
     <label>Numero di tavoli<input id="n" type="number" min="0" max="200" value="12"></label>
     <label>Titolo (QR generico)<input id="title" value="DUE DI PICCHE "></label>
@@ -50,7 +50,7 @@ function gen(){
   items.forEach(function(t){
     var link=base; if(t!==null){ link+=(base.indexOf("?")>-1?"&":"?")+encodeURIComponent(param)+"="+t; }
     var c=document.createElement("div"); c.className="card";
-    c.innerHTML='<img src="logounico.png" alt=""><h3></h3><div class="qr"></div><p>Inquadra per vedere il menù<br>Scan to view the menu</p><small></small>';
+    c.innerHTML='<img src="logoDUE DI PICCHE.png" alt=""><h3></h3><div class="qr"></div><p>Inquadra per vedere il menù<br>Scan to view the menu</p><small></small>';
     c.querySelector("h3").textContent=(t!==null?"Tavolo "+t:title);
     c.querySelector("small").textContent=link;
     grid.appendChild(c);

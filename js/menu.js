@@ -12,7 +12,7 @@ const MENU_REST_URL =
   SUPABASE_URL +
   "/rest/v1/piatti?select=*&disponibile=eq.true&order=ordine.asc";
 
-const MENU_CACHE_KEY = "unico_menu_cache_v1";
+const MENU_CACHE_KEY = "DUE DI PICCHE_menu_cache_v1";
 
 const MENU_CATEGORY_ORDER = [
   "Antipasti",
@@ -379,7 +379,7 @@ function injectMenuJsonLd(dishes){
     "@type": "Menu",
 
     "@id":
-      "https://unicorestaurant.netlify.app/menu.html#menu",
+      "https://DUE DI PICCHErestaurant.netlify.app/menu.html#menu",
 
     "name":
       "Menù DUE DI PICCHE ",
@@ -692,7 +692,7 @@ async function loadPublicMenu(){
           '<p class="empty-hint">' +
           'Impossibile caricare il menù al momento. ' +
           'Chiamaci allo ' +
-          '<a href="tel:+393314100134">' +
+          '<a href="tel:+393389536266">' +
           '+39 331 410 0134' +
           '</a>.' +
           '</p>';

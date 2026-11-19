@@ -18,4 +18,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://unicorestaurant.netlify.app/sitemap.xml
+Sitemap: https://DUE DI PICCHErestaurant.netlify.app/sitemap.xml

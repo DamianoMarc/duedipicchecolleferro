@@ -1,4 +1,4 @@
-/* DUE DI PICCHE  — stylesheet unico per tutte le pagine */
+/* DUE DI PICCHE  — stylesheet DUE DI PICCHE per tutte le pagine */
 
 @font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:500;font-display:swap;src:url("../fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2")}
 @font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:600;font-display:swap;src:url("../fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2")}
@@ -254,9 +254,9 @@ footer{border-top:1px solid var(--line);margin-top:0}
 .nav-mob-cta{display:none}
 
 /* banner cookie: sfondo bianco, testo scuro (h2/h3 ereditavano il colore chiaro) */
-#unico-cookie-banner h3,.unico-cookie-modal-box h2,.unico-cookie-option h4{color:#222;font-family:var(--sans);font-weight:600;line-height:1.3}
-#unico-cookie-banner h3{font-size:18px}
-.unico-cookie-modal-box,.unico-cookie-modal-box p,#unico-cookie-banner p{color:#333}
+#DUE DI PICCHE-cookie-banner h3,.DUE DI PICCHE-cookie-modal-box h2,.DUE DI PICCHE-cookie-option h4{color:#222;font-family:var(--sans);font-weight:600;line-height:1.3}
+#DUE DI PICCHE-cookie-banner h3{font-size:18px}
+.DUE DI PICCHE-cookie-modal-box,.DUE DI PICCHE-cookie-modal-box p,#DUE DI PICCHE-cookie-banner p{color:#333}
 .hero h1{max-width:14ch}
 
 /* Popup prenotazione (Preenota in iframe) */

@@ -11,11 +11,11 @@
 - Vicino a: COLLEFERRO Outlet Village, Rainbow MagicLand, uscita COLLEFERRO dell'autostrada A1
 
 ## Pagine
-- [Menù con prezzi](https://unicorestaurant.netlify.app/menu.html): antipasti, primi, secondi, dolci
-- [Ristorante a COLLEFERRO](https://unicorestaurant.netlify.app/ristorante-COLLEFERRO.html): cucina, orari, prenotazioni
-- [Steakhouse a COLLEFERRO](https://unicorestaurant.netlify.app/steakhouse-COLLEFERRO.html): carne e piatti alla piastra
-- [Cena vicino all'Outlet](https://unicorestaurant.netlify.app/cena-vicino-COLLEFERRO-outlet.html)
-- [Cena vicino a Rainbow MagicLand](https://unicorestaurant.netlify.app/cena-vicino-rainbow-magicland.html)
-- [Come arrivare e parcheggio](https://unicorestaurant.netlify.app/come-arrivare.html)
-- [Domande frequenti](https://unicorestaurant.netlify.app/faq.html)
-- [Galleria](https://unicorestaurant.netlify.app/galleria.html)
+- [Menù con prezzi](https://DUE DI PICCHErestaurant.netlify.app/menu.html): antipasti, primi, secondi, dolci
+- [Ristorante a COLLEFERRO](https://DUE DI PICCHErestaurant.netlify.app/ristorante-COLLEFERRO.html): cucina, orari, prenotazioni
+- [Steakhouse a COLLEFERRO](https://DUE DI PICCHErestaurant.netlify.app/steakhouse-COLLEFERRO.html): carne e piatti alla piastra
+- [Cena vicino all'Outlet](https://DUE DI PICCHErestaurant.netlify.app/cena-vicino-COLLEFERRO-outlet.html)
+- [Cena vicino a Rainbow MagicLand](https://DUE DI PICCHErestaurant.netlify.app/cena-vicino-rainbow-magicland.html)
+- [Come arrivare e parcheggio](https://DUE DI PICCHErestaurant.netlify.app/come-arrivare.html)
+- [Domande frequenti](https://DUE DI PICCHErestaurant.netlify.app/faq.html)
+- [Galleria](https://DUE DI PICCHErestaurant.netlify.app/galleria.html)
