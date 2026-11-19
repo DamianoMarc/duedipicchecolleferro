@@ -50,7 +50,7 @@ function gen(){
   items.forEach(function(t){
     var link=base; if(t!==null){ link+=(base.indexOf("?")>-1?"&":"?")+encodeURIComponent(param)+"="+t; }
     var c=document.createElement("div"); c.className="card";
-    c.innerHTML='<img src="logoDUE DI PICCHE.png" alt=""><h3></h3><div class="qr"></div><p>Inquadra per vedere il menù<br>Scan to view the menu</p><small></small>';
+    c.innerHTML='<img src="logounico.png" alt=""><h3></h3><div class="qr"></div><p>Inquadra per vedere il menù<br>Scan to view the menu</p><small></small>';
     c.querySelector("h3").textContent=(t!==null?"Tavolo "+t:title);
     c.querySelector("small").textContent=link;
     grid.appendChild(c);
